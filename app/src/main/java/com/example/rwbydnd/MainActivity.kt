@@ -7,14 +7,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarRate
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
@@ -24,13 +32,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.rwbydnd.ui.theme.RwbydndTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,14 +56,17 @@ class MainActivity : ComponentActivity() {
                 Tab(title = "Characters"),
                 Tab(title = "Rules")
             )
-            val pagerState = rememberPagerState() {tabItems.size}
+            val pagerState = rememberPagerState() { tabItems.size }
             var selectedTab by remember { mutableIntStateOf(0) }
             var characters = listOf(
-                Character("asbcs"),
-                Character("adasdfsdf")
+                Character(0, "asbcs"),
+                Character(1, "adasdfsdf")
             )
-            LaunchedEffect(selectedTab) {pagerState.animateScrollToPage(selectedTab)}
-            LaunchedEffect(pagerState.currentPage) {selectedTab = pagerState.currentPage}
+            val favourites = remember {
+                mutableStateMapOf<Int, Boolean>()
+            }
+            LaunchedEffect(selectedTab) { pagerState.animateScrollToPage(selectedTab) }
+            LaunchedEffect(pagerState.currentPage) { selectedTab = pagerState.currentPage }
             RwbydndTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     SecondaryTabRow(selectedTab, modifier = Modifier.padding(innerPadding)) {
@@ -62,14 +79,47 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize().offset(0.dp, 75.dp))
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .offset(0.dp, 75.dp)
+                    )
                     {
-                            index -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){Text(text = tabItems[index].title)}
+                        //index -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){Text(text = tabItems[index].title)}
 
                     }
-                }
-                LazyColumn(Modifier.padding(0.dp, 75.dp, 0.dp, 25.dp)) {
-                    items(characters) { character -> Box(Modifier.fillMaxWidth()) {Text(character.characterName)}}
+
+                    if (selectedTab == 0) {
+                        LazyColumn(modifier = Modifier.padding(0.dp, 85.dp, 0.dp, 25.dp)) {
+
+                            val sortedCharacters = characters.sortedByDescending {
+                                favourites[it.characterId] ?: false
+                            }
+
+                            items(sortedCharacters, key = { it.characterId }) { character ->
+                                var isToggled = favourites[character.characterId] ?: false
+
+                                Row(modifier = Modifier.fillMaxSize().animateItem(), verticalAlignment = Alignment.CenterVertically)
+                                {
+                                    IconButton(
+                                        onClick = { favourites[character.characterId] = !isToggled
+                                            println("CLICKED ${character.characterId}")}
+                                    ) {
+                                        Icon(
+                                            imageVector = if (isToggled) {Icons.Filled.Star} else {Icons.Outlined.StarRate},
+                                            contentDescription = if (isToggled) "Selected icon button" else "Unselected icon button."
+                                        )
+                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(15.dp, 5.dp),
+                                    ) { Text(character.characterName, fontSize = 18.sp) }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

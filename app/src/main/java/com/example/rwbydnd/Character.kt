@@ -2,8 +2,11 @@ package com.example.rwbydnd
 
 data class Character
 (
+        var characterId: Int,
         var characterName: String,
-        /*var characterSpecies: Int,
+        /*
+        var favourite: Boolean,
+        var characterSpecies: Int,
         var appearance: String?,
         var weaponName: String,
         var weaponType1: Int,
