@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -18,9 +19,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarRate
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -113,12 +117,24 @@ class MainActivity : ComponentActivity() {
                                     }
                                     Box(
                                         modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(15.dp, 5.dp),
+                                            .fillMaxHeight()
+                                            .padding(15.dp, 5.dp)
+                                            .weight(1f),
                                     ) { Text(character.characterName, fontSize = 18.sp) }
+                                    Icon(
+                                        imageVector = Icons.Filled.ChevronRight,
+                                        contentDescription = "View character",
+                                        Modifier.padding(0.dp,0.dp, 10.dp, 0.dp)
+                                    )
                                 }
                             }
                         }
+                    }
+                    FloatingActionButton(
+                        onClick = {  },
+                        modifier = Modifier.padding(innerPadding).padding(310.dp, 710.dp, 0.dp, 0.dp)
+                    ) {
+                        Icon(Icons.Filled.Add, "Floating action button.")
                     }
                 }
             }
