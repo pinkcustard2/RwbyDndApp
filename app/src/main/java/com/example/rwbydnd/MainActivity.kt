@@ -34,8 +34,6 @@ class MainActivity : ComponentActivity() {
                         Text("Character creation screen")
                     }
                 }
-
-
             }
         }
     }

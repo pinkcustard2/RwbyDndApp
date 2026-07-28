@@ -1,8 +1,13 @@
 package com.example.rwbydnd
 
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
+
+@Entity
 data class Character
 (
-        var characterId: Int,
+        @PrimaryKey(autoGenerate = true)
+        var characterId: Int = 0,
         var characterName: String,
         /*
         var favourite: Boolean,
@@ -17,10 +22,18 @@ data class Character
         var semblanceDescription: String,
         var semblanceStrength: Int,
         var skillPoints: Int,
-        var stats: List<Int>,
-        var proficiencies: List<Int>,
         var currentHealth: Int,
         var currentAura: Int,
         var coins: Int,
         var proficiencyBonus: Int*/
+)
+
+data class Stats
+(
+        var characterId: Int
+)
+
+data class Proficiencies
+(
+        var characterId: Int
 )

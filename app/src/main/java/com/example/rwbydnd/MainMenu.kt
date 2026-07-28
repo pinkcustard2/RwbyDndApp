@@ -20,6 +20,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.StarRate
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -35,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -87,11 +91,13 @@ class MainMenuScreen {
             }
 
             if (selectedTab == 0) {
+                var isEditing by remember {mutableStateOf(false)}
                 LazyColumn(modifier = Modifier.padding(0.dp, 85.dp, 0.dp, 25.dp)) {
 
                     val sortedCharacters = characters.sortedByDescending {
                         favourites[it.characterId] ?: false
                     }
+
 
                     items(sortedCharacters, key = { it.characterId }) { character ->
                         var isToggled = favourites[character.characterId] ?: false
@@ -124,21 +130,42 @@ class MainMenuScreen {
                                     .padding(10.dp, 5.dp)
                                     .weight(1f),
                             ) { Text(character.characterName, fontSize = 18.sp) }
-                            Icon(
-                                imageVector = Icons.Filled.ChevronRight,
-                                contentDescription = "View character",
-                                Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
-                            )
+                            if(!isEditing)
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.ChevronRight,
+                                    contentDescription = "View character",
+                                    Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
+                                )
+                            }
+                            else
+                            {
+                                Icon(
+                                    imageVector = Icons.Outlined.Delete,
+                                    contentDescription = "View character",
+                                    Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
+                                )
+                            }
                         }
                     }
                 }
                 FloatingActionButton(
-                    onClick = {navController.navigate(CharacterCreation)},
+                    onClick = {
+                        //navController.navigate(CharacterCreation)
+                        isEditing = !isEditing
+                    },
                     modifier = Modifier
                         .padding(innerPadding)
                         .padding(310.dp, 710.dp, 0.dp, 0.dp)
                 ) {
-                    Icon(Icons.Filled.Add, "Floating action button.")
+                    if(!isEditing)
+                    {
+                        Icon(Icons.Outlined.Edit, "Floating action button.")
+                    }
+                    else
+                    {
+                        Icon(Icons.Outlined.Close, "Floating action button.")
+                    }
                 }
             } else
             {
