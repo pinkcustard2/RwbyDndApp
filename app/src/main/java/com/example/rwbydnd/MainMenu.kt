@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
@@ -142,6 +143,30 @@ class MainMenuScreen {
                             {
                                 Icon(
                                     imageVector = Icons.Outlined.Delete,
+                                    contentDescription = "View character",
+                                    Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
+                                )
+                            }
+                        }
+                    }
+                    if(isEditing)
+                    {
+                        item{
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .animateItem(),
+                                verticalAlignment = Alignment.CenterVertically
+                            )
+                            {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .padding(15.dp, 10.dp)
+                                        .weight(1f),
+                                ) { Text("New Character", fontSize = 18.sp) }
+                                Icon(
+                                    imageVector = Icons.Outlined.Add,
                                     contentDescription = "View character",
                                     Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
                                 )
