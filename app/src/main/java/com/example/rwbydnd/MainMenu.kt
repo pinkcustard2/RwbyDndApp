@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,7 +51,7 @@ import androidx.navigation.NavController
 
 class MainMenuScreen {
     @Composable
-    fun MainScreen(navController: NavController)
+    fun MainScreen(navController: NavController, state: CharacterState, onEvent: (CharacterEvent) -> Unit)
     {
         val tabItems = listOf(
             Tab(title = "Characters"),
@@ -58,17 +59,27 @@ class MainMenuScreen {
         )
         val pagerState = rememberPagerState() { tabItems.size }
         var selectedTab by remember { mutableIntStateOf(0) }
-        var characters = listOf(
-            Character(0, "asbcs"),
-            Character(1, "adasdfsdf")
-        )
-        val favourites = remember {
-            mutableStateMapOf<Int, Boolean>()
-        }
+        var isEditing by remember {mutableStateOf(false)}
         LaunchedEffect(selectedTab) { pagerState.animateScrollToPage(selectedTab) }
         LaunchedEffect(pagerState.currentPage) { selectedTab = pagerState.currentPage }
 
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Scaffold(modifier = Modifier.fillMaxSize(),
+            floatingActionButton = {FloatingActionButton(
+                onClick = {
+                    isEditing = !isEditing
+                },
+            ) {
+                if(!isEditing)
+                {
+                    Icon(Icons.Outlined.Edit, "Floating action button.")
+                }
+                else
+                {
+                    Icon(Icons.Outlined.Close, "Floating action button.")
+                }
+            }}
+        )
+        { innerPadding ->
             SecondaryTabRow(selectedTab, modifier = Modifier.padding(innerPadding)) {
                 tabItems.forEachIndexed { index, tab ->
                     Tab(
@@ -91,16 +102,13 @@ class MainMenuScreen {
             }
 
             if (selectedTab == 0) {
-                var isEditing by remember {mutableStateOf(false)}
                 LazyColumn(modifier = Modifier.padding(0.dp, 85.dp, 0.dp, 25.dp)) {
-
-                    val sortedCharacters = characters.sortedByDescending {
+                    /*val sortedCharacters = state.characters.sortedByDescending {
                         favourites[it.characterId] ?: false
-                    }
+                    }*/
 
-
-                    items(sortedCharacters, key = { it.characterId }) { character ->
-                        var isToggled = favourites[character.characterId] ?: false
+                    items(state.characters, key = { it.characterId }) { character ->
+                        var isToggled = character.favourite
 
                         Row(
                             modifier = Modifier
@@ -111,8 +119,8 @@ class MainMenuScreen {
                         {
                             IconButton(
                                 onClick = {
-                                    favourites[character.characterId] = !isToggled
-                                    println("CLICKED ${character.characterId}")
+                                    onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                    onEvent(CharacterEvent.SetFavourite(!character.favourite))
                                 }
                             ) {
                                 Icon(
@@ -151,44 +159,31 @@ class MainMenuScreen {
                     if(isEditing)
                     {
                         item{
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .animateItem(),
-                                verticalAlignment = Alignment.CenterVertically
-                            )
+                            TextButton(onClick = { navController.navigate(CharacterCreationPg1) },)
                             {
-                                Box(
+                                Row(
                                     modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(15.dp, 10.dp)
-                                        .weight(1f),
-                                ) { Text("New Character", fontSize = 18.sp) }
-                                Icon(
-                                    imageVector = Icons.Outlined.Add,
-                                    contentDescription = "View character",
-                                    Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
+                                        .fillMaxSize()
+                                        .animateItem(),
+                                    verticalAlignment = Alignment.CenterVertically,
                                 )
+                                {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .padding(15.dp, 10.dp)
+                                            .weight(1f)
+                                    ) { Text("New Character", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface) }
+                                    Icon(
+                                        imageVector = Icons.Outlined.Add,
+                                        contentDescription = "View character",
+                                        Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp),
+                                        tint =  MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             }
+
                         }
-                    }
-                }
-                FloatingActionButton(
-                    onClick = {
-                        //navController.navigate(CharacterCreation)
-                        isEditing = !isEditing
-                    },
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(310.dp, 710.dp, 0.dp, 0.dp)
-                ) {
-                    if(!isEditing)
-                    {
-                        Icon(Icons.Outlined.Edit, "Floating action button.")
-                    }
-                    else
-                    {
-                        Icon(Icons.Outlined.Close, "Floating action button.")
                     }
                 }
             } else

@@ -3,15 +3,14 @@ package com.example.rwbydnd
 import androidx.room3.Entity
 import androidx.room3.PrimaryKey
 
-@Entity
+@Entity(tableName = "CharacterTest")
 data class Character
 (
         @PrimaryKey(autoGenerate = true)
         var characterId: Int = 0,
         var characterName: String,
-        /*
         var favourite: Boolean,
-        var characterSpecies: Int,
+        /*var characterSpecies: Int,
         var appearance: String?,
         var weaponName: String,
         var weaponType1: Int,

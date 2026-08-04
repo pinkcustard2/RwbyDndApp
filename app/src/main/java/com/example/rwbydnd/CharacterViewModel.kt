@@ -13,6 +13,18 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
     private val _state = MutableStateFlow(CharacterState())
     val state = _state.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CharacterState())
 
+    init {
+        viewModelScope.launch {
+            characterDao.getCharacters().collect { characters ->
+                _state.update {
+                    it.copy(
+                        characters = characters
+                    )
+                }
+            }
+        }
+    }
+
     fun onEvent(event: CharacterEvent)
     {
         when(event)
@@ -24,6 +36,8 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
             }
             CharacterEvent.NewCharacter -> {
                 val characterName = state.value.characterName
+                val characterId = state.value.characterId
+                val favourite = state.value.favourite
 
                 if (characterName.isBlank())
                 {
@@ -31,18 +45,39 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                 }
 
                 val character = Character(
-                    characterName = characterName
+                    characterId = characterId,
+                    characterName = characterName,
+                    favourite = favourite
                 )
                 viewModelScope.launch {
                     characterDao.upsertCharacter(character)
                 }
                 _state.update {
                     it.copy(characterName = "")
+                    it.copy(characterId = 0)
+                    it.copy(favourite = false)
                 }
             }
             is CharacterEvent.SetCharacterName -> {
                 _state.update { it.copy(
                     characterName = event.characterName
+                ) }
+            }
+
+            is CharacterEvent.SetFavourite -> {
+                viewModelScope.launch {
+                    characterDao.updateFavourite(state.value.characterId, event.favourite)
+                }
+                _state.update {
+                    it.copy(characterName = "")
+                    it.copy(characterId = 0)
+                    it.copy(favourite = false)
+                }
+            }
+
+            is CharacterEvent.SetCharacterId -> {
+                _state.update { it.copy(
+                    characterId = event.characterId
                 ) }
             }
         }
