@@ -2,6 +2,7 @@ package com.example.rwbydnd
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ChevronRight
@@ -22,7 +23,7 @@ class CharacterCreationScreen
         Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    //onEvent(CharacterEvent.NewCharacter)
+                    onEvent(CharacterEvent.NewCharacter)
                 }
             ) {
                 Icon(imageVector = Icons.Outlined.ChevronRight,
@@ -38,7 +39,8 @@ class CharacterCreationScreen
                 },
                 placeholder = {
                     Text(text = "Character Name")
-                }
+                },
+                label = {Text(text = "Character Name")},
             )
         }
     }

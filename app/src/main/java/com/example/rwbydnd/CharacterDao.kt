@@ -15,11 +15,21 @@ interface CharacterDao
     @Delete
     suspend fun deleteCharacter(character: Character)
 
-    @Query("SELECT * FROM CharacterTest ORDER BY favourite DESC, characterName")
+    @Query("SELECT * FROM Characters ORDER BY favourite DESC, characterName")
     fun getCharacters(): Flow<List<Character>>
 
-    @Query("UPDATE CharacterTest \n" +
+    @Query("UPDATE Characters \n" +
             "    SET favourite = :favourite \n" +
             "    WHERE characterId = :id")
     suspend fun updateFavourite(id: Int, favourite: Boolean)
+
+    @Query("SELECT * \n" +
+            "FROM Characters \n" +
+            "WHERE characterId = :id")
+    fun getCharacterFromId(id: Int): Character
+
+    @Query("SELECT * \n" +
+            "FROM Characters \n" +
+            "WHERE characterName = :characterName")
+    fun getCharacterFromCharacterName(characterName: String): Character
 }

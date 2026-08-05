@@ -24,9 +24,11 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.StarRate
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
@@ -34,11 +36,11 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -60,6 +62,7 @@ class MainMenuScreen {
         val pagerState = rememberPagerState() { tabItems.size }
         var selectedTab by remember { mutableIntStateOf(0) }
         var isEditing by remember {mutableStateOf(false)}
+        var showDeleteDialog by remember { mutableIntStateOf(-1) }
         LaunchedEffect(selectedTab) { pagerState.animateScrollToPage(selectedTab) }
         LaunchedEffect(pagerState.currentPage) { selectedTab = pagerState.currentPage }
 
@@ -110,6 +113,17 @@ class MainMenuScreen {
                     items(state.characters, key = { it.characterId }) { character ->
                         var isToggled = character.favourite
 
+                        if(showDeleteDialog == character.characterId)
+                        {
+                            AlertDialog(
+                                confirmButton = { TextButton(onClick = {onEvent(CharacterEvent.DeleteCharacter(character))}) {Text("Delete")} },
+                                dismissButton = { TextButton(onClick = { showDeleteDialog = -1 }) {Text("Cancel")} },
+                                onDismissRequest = { showDeleteDialog = -1 },
+                                title = {Text("Delete Character")},
+                                text = {Text("Are you sure you want to delete ${character.characterName}")}
+                            )
+                        }
+
                         Row(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -117,42 +131,50 @@ class MainMenuScreen {
                             verticalAlignment = Alignment.CenterVertically
                         )
                         {
-                            IconButton(
-                                onClick = {
-                                    onEvent(CharacterEvent.SetCharacterId(character.characterId))
-                                    onEvent(CharacterEvent.SetFavourite(!character.favourite))
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = if (isToggled) {
-                                        Icons.Filled.Star
-                                    } else {
-                                        Icons.Outlined.StarRate
+                                IconButton(
+                                    onClick = {
+                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                        onEvent(CharacterEvent.SetFavourite(!character.favourite))
                                     },
-                                    contentDescription = if (isToggled) "Selected icon button" else "Unselected icon button."
-                                )
-                            }
+                                ) {
+                                    Icon(
+                                        imageVector = if (isToggled) {
+                                            Icons.Filled.Star
+                                        } else {
+                                            Icons.Outlined.StarRate
+                                        },
+                                        contentDescription = if (isToggled) "Selected icon button" else "Unselected icon button.",
+                                    )
+                                }
                             Box(
                                 modifier = Modifier
                                     .fillMaxHeight()
-                                    .padding(10.dp, 5.dp)
+                                    .padding(10.dp, 0.dp)
                                     .weight(1f),
                             ) { Text(character.characterName, fontSize = 18.sp) }
                             if(!isEditing)
                             {
-                                Icon(
-                                    imageVector = Icons.Filled.ChevronRight,
-                                    contentDescription = "View character",
-                                    Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
-                                )
+                                IconButton(onClick = {})
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.ChevronRight,
+                                        contentDescription = "View character",
+                                        Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
+                                    )
+                                }
                             }
                             else
                             {
-                                Icon(
+                                IconButton(onClick = {
+                                    showDeleteDialog = character.characterId
+                                })
+                                {
+                                    Icon(
                                     imageVector = Icons.Outlined.Delete,
                                     contentDescription = "View character",
                                     Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
-                                )
+                                    )
+                                }
                             }
                         }
                     }
