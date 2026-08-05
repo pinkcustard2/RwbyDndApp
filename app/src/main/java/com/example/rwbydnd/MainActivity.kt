@@ -66,6 +66,38 @@ class MainActivity : ComponentActivity() {
                             viewModel::onEvent
                         )
                     }
+                    composable<CharacterCreationPg2>
+                    {
+                        CharacterCreationScreen().CharacterCreationPg2(
+                            navController,
+                            state,
+                            viewModel::onEvent
+                        )
+                    }
+                    composable<CharacterCreationPg3>
+                    {
+                        CharacterCreationScreen().CharacterCreationPg3(
+                            navController,
+                            state,
+                            viewModel::onEvent
+                        )
+                    }
+                    composable<CharacterCreationPg4>
+                    {
+                        CharacterCreationScreen().CharacterCreationPg4(
+                            navController,
+                            state,
+                            viewModel::onEvent
+                        )
+                    }
+                    composable<CharacterCreationPg5>
+                    {
+                        CharacterCreationScreen().CharacterCreationPg5(
+                            navController,
+                            state,
+                            viewModel::onEvent
+                        )
+                    }
                 }
             }
         }
@@ -78,6 +110,18 @@ object MainMenu
 
 @Serializable
 object CharacterCreationPg1
+
+@Serializable
+object CharacterCreationPg2
+
+@Serializable
+object CharacterCreationPg3
+
+@Serializable
+object CharacterCreationPg4
+
+@Serializable
+object CharacterCreationPg5
 
 data class Tab(
     val title: String

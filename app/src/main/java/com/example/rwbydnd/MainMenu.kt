@@ -28,7 +28,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
@@ -36,7 +35,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -101,15 +99,10 @@ class MainMenuScreen {
             )
             {
                 //index -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){Text(text = tabItems[index].title)}
-
             }
 
             if (selectedTab == 0) {
                 LazyColumn(modifier = Modifier.padding(0.dp, 85.dp, 0.dp, 25.dp)) {
-                    /*val sortedCharacters = state.characters.sortedByDescending {
-                        favourites[it.characterId] ?: false
-                    }*/
-
                     items(state.characters, key = { it.characterId }) { character ->
                         var isToggled = character.favourite
 
