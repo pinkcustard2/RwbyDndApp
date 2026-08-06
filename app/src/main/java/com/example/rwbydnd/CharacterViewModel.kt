@@ -84,6 +84,57 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                 viewModelScope.launch {
                     characterDao.upsertCharacter(character)
                 }
+            }
+            CharacterEvent.NewCharacterWithStateReset -> {
+                val characterName = state.value.characterName
+                val characterId = state.value.characterId
+                val favourite = state.value.favourite
+                val species = state.value.species
+                val appearance = state.value.appearance
+                val weaponName = state.value.weaponName
+                val weaponType1 = state.value.weaponType1
+                val weaponType2 = state.value.weaponType2
+                val weaponType3 = state.value.weaponType3
+                val weaponDescription = state.value.weaponDescription
+                val semblanceName = state.value.semblanceName
+                val semblanceDescription = state.value.semblanceDescription
+                val semblanceStrength = state.value.semblanceStrength
+                val skillPoints = state.value.skillPoints
+                val currentHealth = state.value.currentHealth
+                val currentAura = state.value.currentAura
+                val maxAura = state.value.maxAura
+                val credits = state.value.credits
+                val proficiencyBonus = state.value.proficiencyBonus
+
+                if (characterName.isBlank())
+                {
+                    return
+                }
+
+                val character = Character(
+                    characterId = characterId,
+                    characterName = characterName,
+                    favourite = favourite,
+                    species = species,
+                    appearance = appearance,
+                    weaponName = weaponName,
+                    weaponType1 = weaponType1,
+                    weaponType2 = weaponType2,
+                    weaponType3 = weaponType3,
+                    weaponDescription = weaponDescription,
+                    semblanceName = semblanceName,
+                    semblanceDescription = semblanceDescription,
+                    semblanceStrength = semblanceStrength,
+                    skillPoints = skillPoints,
+                    currentHealth = currentHealth,
+                    currentAura = currentAura,
+                    maxAura = maxAura,
+                    credits = credits,
+                    proficiencyBonus = proficiencyBonus
+                )
+                viewModelScope.launch {
+                    characterDao.upsertCharacter(character)
+                }
                 _state.update {
                     it.copy(
                         characterId = 0,
@@ -108,6 +159,7 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                     )
                 }
             }
+
             is CharacterEvent.SetCharacterName -> {
                 _state.update { it.copy(
                     characterName = event.characterName
@@ -230,59 +282,63 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                 ) }
             }
             is CharacterEvent.SetCharacterFromId -> {
-                val character = characterDao.getCharacterFromId(event.characterId)
-
-                _state.update {
-                    it.copy(
-                        characterId = character.characterId,
-                        characterName = character.characterName,
-                        favourite = character.favourite,
-                        species = character.species,
-                        appearance = character.appearance,
-                        weaponName = character.weaponName,
-                        weaponType1 = character.weaponType1,
-                        weaponType2 = character.weaponType2,
-                        weaponType3 = character.weaponType3,
-                        weaponDescription = character.weaponDescription,
-                        semblanceName = character.semblanceName,
-                        semblanceDescription = character.semblanceDescription,
-                        semblanceStrength = character.semblanceStrength,
-                        skillPoints = character.skillPoints,
-                        currentHealth = character.currentHealth,
-                        currentAura = character.currentAura,
-                        maxAura = character.maxAura,
-                        credits = character.credits,
-                        proficiencyBonus = character.proficiencyBonus
-                    )
+                viewModelScope.launch {
+                    val character = characterDao.getCharacterFromId(event.characterId)
+                    _state.update {
+                        it.copy(
+                            characterId = character.characterId,
+                            characterName = character.characterName,
+                            favourite = character.favourite,
+                            species = character.species,
+                            appearance = character.appearance,
+                            weaponName = character.weaponName,
+                            weaponType1 = character.weaponType1,
+                            weaponType2 = character.weaponType2,
+                            weaponType3 = character.weaponType3,
+                            weaponDescription = character.weaponDescription,
+                            semblanceName = character.semblanceName,
+                            semblanceDescription = character.semblanceDescription,
+                            semblanceStrength = character.semblanceStrength,
+                            skillPoints = character.skillPoints,
+                            currentHealth = character.currentHealth,
+                            currentAura = character.currentAura,
+                            maxAura = character.maxAura,
+                            credits = character.credits,
+                            proficiencyBonus = character.proficiencyBonus
+                        )
+                    }
                 }
             }
 
             is CharacterEvent.SetCharacterFromName -> {
-                val character = characterDao.getCharacterFromCharacterName(event.characterName)
+                viewModelScope.launch {
+                    val character = characterDao.getCharacterFromCharacterName(event.characterName)
 
-                _state.update {
-                    it.copy(
-                        characterId = character.characterId,
-                        characterName = character.characterName,
-                        favourite = character.favourite,
-                        species = character.species,
-                        appearance = character.appearance,
-                        weaponName = character.weaponName,
-                        weaponType1 = character.weaponType1,
-                        weaponType2 = character.weaponType2,
-                        weaponType3 = character.weaponType3,
-                        weaponDescription = character.weaponDescription,
-                        semblanceName = character.semblanceName,
-                        semblanceDescription = character.semblanceDescription,
-                        semblanceStrength = character.semblanceStrength,
-                        skillPoints = character.skillPoints,
-                        currentHealth = character.currentHealth,
-                        currentAura = character.currentAura,
-                        maxAura = character.maxAura,
-                        credits = character.credits,
-                        proficiencyBonus = character.proficiencyBonus
-                    )
+                    _state.update {
+                        it.copy(
+                            characterId = character.characterId,
+                            characterName = character.characterName,
+                            favourite = character.favourite,
+                            species = character.species,
+                            appearance = character.appearance,
+                            weaponName = character.weaponName,
+                            weaponType1 = character.weaponType1,
+                            weaponType2 = character.weaponType2,
+                            weaponType3 = character.weaponType3,
+                            weaponDescription = character.weaponDescription,
+                            semblanceName = character.semblanceName,
+                            semblanceDescription = character.semblanceDescription,
+                            semblanceStrength = character.semblanceStrength,
+                            skillPoints = character.skillPoints,
+                            currentHealth = character.currentHealth,
+                            currentAura = character.currentAura,
+                            maxAura = character.maxAura,
+                            credits = character.credits,
+                            proficiencyBonus = character.proficiencyBonus
+                        )
+                    }
                 }
+
             }
         }
     }

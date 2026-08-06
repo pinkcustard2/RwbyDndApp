@@ -26,10 +26,10 @@ interface CharacterDao
     @Query("SELECT * \n" +
             "FROM Characters \n" +
             "WHERE characterId = :id")
-    fun getCharacterFromId(id: Int): Character
+    suspend fun getCharacterFromId(id: Int): Character
 
     @Query("SELECT * \n" +
             "FROM Characters \n" +
             "WHERE characterName = :characterName")
-    fun getCharacterFromCharacterName(characterName: String): Character
+    suspend fun getCharacterFromCharacterName(characterName: String): Character
 }

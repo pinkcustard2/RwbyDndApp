@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.StarRate
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -147,7 +148,14 @@ class MainMenuScreen {
                             ) { Text(character.characterName, fontSize = 18.sp) }
                             if(!isEditing)
                             {
-                                IconButton(onClick = {})
+                                IconButton(onClick = {
+                                    if(character.species == null)
+                                    {
+                                        // has not finished pg1 of character creation
+                                        onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
+                                        navController.navigate(CharacterCreationPg1)
+                                    }
+                                })
                                 {
                                     Icon(
                                         imageVector = Icons.Filled.ChevronRight,

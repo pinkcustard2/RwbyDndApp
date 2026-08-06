@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
@@ -14,10 +13,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room3.Room
+import com.example.rwbydnd.characterCreation.CharacterCreatorPg1
+import com.example.rwbydnd.characterCreation.CharacterCreatorPg2
 
 import com.example.rwbydnd.ui.theme.RwbydndTheme
 import kotlinx.serialization.Serializable
 
+
+// To do:
+// Make so cant have 2 characters of same name at some point
 class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(
@@ -60,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<CharacterCreationPg1>
                     {
-                        CharacterCreationScreen().CharacterCreationPg1(
+                        CharacterCreatorPg1().CharacterCreationPg1(
                             navController,
                             state,
                             viewModel::onEvent
@@ -68,31 +72,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<CharacterCreationPg2>
                     {
-                        CharacterCreationScreen().CharacterCreationPg2(
-                            navController,
-                            state,
-                            viewModel::onEvent
-                        )
-                    }
-                    composable<CharacterCreationPg3>
-                    {
-                        CharacterCreationScreen().CharacterCreationPg3(
-                            navController,
-                            state,
-                            viewModel::onEvent
-                        )
-                    }
-                    composable<CharacterCreationPg4>
-                    {
-                        CharacterCreationScreen().CharacterCreationPg4(
-                            navController,
-                            state,
-                            viewModel::onEvent
-                        )
-                    }
-                    composable<CharacterCreationPg5>
-                    {
-                        CharacterCreationScreen().CharacterCreationPg5(
+                        CharacterCreatorPg2().CharacterCreationPg2(
                             navController,
                             state,
                             viewModel::onEvent

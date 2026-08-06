@@ -3,9 +3,10 @@ package com.example.rwbydnd
 sealed interface CharacterEvent
 {
     object NewCharacter: CharacterEvent
+    object NewCharacterWithStateReset: CharacterEvent
     data class SetCharacterName(val characterName: String): CharacterEvent
     data class SetFavourite(val favourite: Boolean): CharacterEvent
-    data class SetSpecies(val species: Species): CharacterEvent
+    data class SetSpecies(val species: Species?): CharacterEvent
     data class SetAppearance(val appearance: String): CharacterEvent
     data class SetWeaponName(val weaponName: String): CharacterEvent
     data class SetWeaponType1(val weaponType: String): CharacterEvent
