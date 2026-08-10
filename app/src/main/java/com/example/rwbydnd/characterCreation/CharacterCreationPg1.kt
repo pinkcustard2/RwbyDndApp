@@ -249,6 +249,7 @@ class CharacterCreatorPg1
                         Text(text = "Describe Character Appearance")
                     },
                     label = {Text(text = "Appearance")},
+                    minLines = 5
                 )
             }
         }

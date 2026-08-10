@@ -155,6 +155,18 @@ class MainMenuScreen {
                                         onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
                                         navController.navigate(CharacterCreationPg1)
                                     }
+                                    else if(character.weaponName == "" || character.weaponType1 == "" || character.weaponType2 == "")
+                                    {
+                                        // has not finished pg2 of character creation
+                                        onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
+                                        navController.navigate(CharacterCreationPg2)
+                                    }
+                                    else if(character.semblanceName == "" || character.semblanceStrength == -1)
+                                    {
+                                        // has not finished pg3 of character creation
+                                        onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
+                                        navController.navigate(CharacterCreationPg3)
+                                    }
                                 })
                                 {
                                     Icon(

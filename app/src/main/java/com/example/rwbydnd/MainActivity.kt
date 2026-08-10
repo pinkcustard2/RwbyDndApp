@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room3.Room
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg1
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg2
+import com.example.rwbydnd.characterCreation.CharacterCreatorPg3
 
 import com.example.rwbydnd.ui.theme.RwbydndTheme
 import kotlinx.serialization.Serializable
@@ -73,6 +74,22 @@ class MainActivity : ComponentActivity() {
                     composable<CharacterCreationPg2>
                     {
                         CharacterCreatorPg2().CharacterCreationPg2(
+                            navController,
+                            state,
+                            viewModel::onEvent
+                        )
+                    }
+                    composable<CharacterCreationPg3>
+                    {
+                        CharacterCreatorPg3().CharacterCreationPg3(
+                            navController,
+                            state,
+                            viewModel::onEvent
+                        )
+                    }
+                    composable<CharacterCreationPg4>
+                    {
+                        CharacterCreatorPg3().CharacterCreationPg3(
                             navController,
                             state,
                             viewModel::onEvent
