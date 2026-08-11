@@ -1,4 +1,6 @@
-package com.example.rwbydnd
+package com.example.rwbydnd.database
+
+import com.example.rwbydnd.Species
 
 data class CharacterState(
     val characters: List<Character> = emptyList(),

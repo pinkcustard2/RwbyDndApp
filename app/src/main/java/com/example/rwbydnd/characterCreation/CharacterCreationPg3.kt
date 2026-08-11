@@ -30,8 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.rwbydnd.CharacterCreationPg4
-import com.example.rwbydnd.CharacterEvent
-import com.example.rwbydnd.CharacterState
+import com.example.rwbydnd.database.CharacterEvent
+import com.example.rwbydnd.database.CharacterState
 
 class CharacterCreatorPg3
 {

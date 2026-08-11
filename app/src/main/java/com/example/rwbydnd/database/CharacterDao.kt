@@ -1,4 +1,4 @@
-package com.example.rwbydnd
+package com.example.rwbydnd.database
 
 import androidx.room3.Dao
 import androidx.room3.Delete

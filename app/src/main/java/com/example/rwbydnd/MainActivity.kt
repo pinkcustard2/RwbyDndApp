@@ -16,13 +16,16 @@ import androidx.room3.Room
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg1
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg2
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg3
+import com.example.rwbydnd.database.CharacterDatabase
 
 import com.example.rwbydnd.ui.theme.RwbydndTheme
+import com.example.rwbydnd.viewmodels.CharacterViewModel
 import kotlinx.serialization.Serializable
 
 
 // To do:
 // Make so cant have 2 characters of same name at some point
+// Make so species and semblance strength text defaults to correct one when editing character
 class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(

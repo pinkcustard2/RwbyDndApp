@@ -1,7 +1,9 @@
-package com.example.rwbydnd
+package com.example.rwbydnd.database
 
 import androidx.room3.Entity
+import androidx.room3.ForeignKey
 import androidx.room3.PrimaryKey
+import com.example.rwbydnd.Species
 
 @Entity(tableName = "Characters")
 data class Character
@@ -28,9 +30,25 @@ data class Character
         var proficiencyBonus: Int
 )
 
+@Entity(tableName = "Stats",
+        foreignKeys = [
+                ForeignKey(
+                        entity = Character::class,
+                        parentColumns = ["characterId"],
+                        childColumns = ["characterId"],
+                        onDelete = ForeignKey.CASCADE
+                )
+        ])
 data class Stats
 (
-        var characterId: Int
+        @PrimaryKey
+        var characterId: Int,
+        var strength: Int,
+        var dexterity: Int,
+        var intelligence: Int,
+        var wisdom: Int,
+        var constitution: Int,
+        var charisma: Int
 )
 
 data class Proficiencies

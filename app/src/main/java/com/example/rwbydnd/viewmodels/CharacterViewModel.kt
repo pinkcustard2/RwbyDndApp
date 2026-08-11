@@ -1,7 +1,11 @@
-package com.example.rwbydnd
+package com.example.rwbydnd.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rwbydnd.database.Character
+import com.example.rwbydnd.database.CharacterDao
+import com.example.rwbydnd.database.CharacterEvent
+import com.example.rwbydnd.database.CharacterState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -11,7 +15,10 @@ import kotlinx.coroutines.launch
 class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
 {
     private val _state = MutableStateFlow(CharacterState())
-    val state = _state.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CharacterState())
+    val state = _state.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000),
+        CharacterState()
+    )
 
     init {
         viewModelScope.launch {
