@@ -16,16 +16,19 @@ import androidx.room3.Room
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg1
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg2
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg3
+import com.example.rwbydnd.characterCreation.CharacterCreatorPg4
 import com.example.rwbydnd.database.CharacterDatabase
-
 import com.example.rwbydnd.ui.theme.RwbydndTheme
 import com.example.rwbydnd.viewmodels.CharacterViewModel
+import com.example.rwbydnd.viewmodels.StatsViewModel
 import kotlinx.serialization.Serializable
 
 
 // To do:
 // Make so cant have 2 characters of same name at some point
 // Make so species and semblance strength text defaults to correct one when editing character
+// Alert user why they can't go from screen 3 to screen 4
+// Fix switching between two character creation stats screens skill point amount not correctly updating
 class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(
@@ -35,11 +38,21 @@ class MainActivity : ComponentActivity() {
         ).build()
     }
 
-    private val viewModel by viewModels<CharacterViewModel>(
+    private val characterViewModel by viewModels<CharacterViewModel>(
         factoryProducer = {
             object : ViewModelProvider.Factory{
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return CharacterViewModel(db.characterDao) as T
+                }
+            }
+        }
+    )
+
+    private val statsViewModel by viewModels<StatsViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return StatsViewModel(db.statsDao) as T
                 }
             }
         }
@@ -51,7 +64,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             RwbydndTheme {
                 val navController = rememberNavController()
-                val state by viewModel.state.collectAsState()
+                val characterState by characterViewModel.state.collectAsState()
+                val statsState by statsViewModel.state.collectAsState()
 
                 NavHost(
                     navController = navController,
@@ -62,40 +76,42 @@ class MainActivity : ComponentActivity() {
                     {
                         MainMenuScreen().MainScreen(
                             navController,
-                            state,
-                            viewModel::onEvent
+                            characterState,
+                            characterViewModel::onEvent
                         )
                     }
                     composable<CharacterCreationPg1>
                     {
                         CharacterCreatorPg1().CharacterCreationPg1(
                             navController,
-                            state,
-                            viewModel::onEvent
+                            characterState,
+                            characterViewModel::onEvent
                         )
                     }
                     composable<CharacterCreationPg2>
                     {
                         CharacterCreatorPg2().CharacterCreationPg2(
                             navController,
-                            state,
-                            viewModel::onEvent
+                            characterState,
+                            characterViewModel::onEvent
                         )
                     }
                     composable<CharacterCreationPg3>
                     {
                         CharacterCreatorPg3().CharacterCreationPg3(
                             navController,
-                            state,
-                            viewModel::onEvent
+                            characterState,
+                            characterViewModel::onEvent
                         )
                     }
                     composable<CharacterCreationPg4>
                     {
-                        CharacterCreatorPg3().CharacterCreationPg3(
+                        CharacterCreatorPg4().CharacterCreationPg4(
                             navController,
-                            state,
-                            viewModel::onEvent
+                            characterState,
+                            statsState,
+                            characterViewModel::onEvent,
+                            statsViewModel::onEvent
                         )
                     }
                 }

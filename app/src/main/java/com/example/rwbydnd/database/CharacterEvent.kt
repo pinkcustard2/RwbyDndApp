@@ -6,6 +6,7 @@ sealed interface CharacterEvent
 {
     object NewCharacter: CharacterEvent
     object NewCharacterWithStateReset: CharacterEvent
+    object ResetState: CharacterEvent
     data class SetCharacterName(val characterName: String): CharacterEvent
     data class SetFavourite(val favourite: Boolean): CharacterEvent
     data class SetSpecies(val species: Species?): CharacterEvent

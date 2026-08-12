@@ -13,5 +13,5 @@ interface StatsDao
     @Query("SELECT * \n" +
             "FROM Stats \n" +
             "WHERE characterId = :id")
-    suspend fun getStatsFromId(id: Int): Stats
+    suspend fun getStatsFromId(id: Int): Stats?
 }

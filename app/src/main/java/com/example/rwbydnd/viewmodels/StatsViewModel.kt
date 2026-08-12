@@ -8,6 +8,7 @@ import com.example.rwbydnd.database.StatsEvent
 import com.example.rwbydnd.database.StatsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -47,7 +48,7 @@ class StatsViewModel(private val statsDao: StatsDao): ViewModel()
                     constitution = constitution,
                     charisma = charisma
                 )
-                
+
                 viewModelScope.launch {
                     statsDao.upsertStats(stats)
                 }
@@ -79,17 +80,23 @@ class StatsViewModel(private val statsDao: StatsDao): ViewModel()
             }
             is StatsEvent.SetStatsFromId -> {
                 viewModelScope.launch {
-                    val stats = statsDao.getStatsFromId(event.characterId)
-                    _state.update {
-                        it.copy(
-                            characterId = stats.characterId,
-                            strength = stats.strength,
-                            dexterity = stats.dexterity,
-                            intelligence = stats.intelligence,
-                            wisdom = stats.wisdom,
-                            constitution = stats.constitution,
-                            charisma = stats.charisma
-                        )
+                    val characterId = _state.first { it.characterId != -1 }.characterId
+                    val stats = statsDao.getStatsFromId(characterId)
+                    if (stats != null) {
+                        _state.update {
+                            it.copy(
+                                characterId = stats.characterId,
+                                strength = stats.strength,
+                                dexterity = stats.dexterity,
+                                intelligence = stats.intelligence,
+                                wisdom = stats.wisdom,
+                                constitution = stats.constitution,
+                                charisma = stats.charisma
+                            )
+                        }
+                    } else
+                    {
+                        onEvent(StatsEvent.ResetState)
                     }
                 }
             }
@@ -102,6 +109,20 @@ class StatsViewModel(private val statsDao: StatsDao): ViewModel()
                 _state.update { it.copy(
                     wisdom = event.wisdom
                 ) }
+            }
+
+            StatsEvent.ResetState -> {
+                _state.update {
+                    it.copy(
+                        characterId = 0,
+                        strength = 6,
+                        dexterity = 6,
+                        intelligence = 6,
+                        wisdom = 6,
+                        constitution = 6,
+                        charisma = 6
+                    )
+                }
             }
         }
     }

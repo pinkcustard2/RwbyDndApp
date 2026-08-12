@@ -3,6 +3,7 @@ package com.example.rwbydnd.database
 sealed interface StatsEvent
 {
     object NewStats: StatsEvent
+    object ResetState: StatsEvent
     data class SetCharacterId(val characterId: Int): StatsEvent
     data class SetStrength(val strength: Int): StatsEvent
     data class SetDexterity(val dexterity: Int): StatsEvent

@@ -6,8 +6,10 @@ import com.example.rwbydnd.database.Character
 import com.example.rwbydnd.database.CharacterDao
 import com.example.rwbydnd.database.CharacterEvent
 import com.example.rwbydnd.database.CharacterState
+import com.example.rwbydnd.database.StatsEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -142,29 +144,7 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                 viewModelScope.launch {
                     characterDao.upsertCharacter(character)
                 }
-                _state.update {
-                    it.copy(
-                        characterId = 0,
-                        characterName = "",
-                        favourite = false,
-                        species = null,
-                        appearance = "",
-                        weaponName = "",
-                        weaponType1 = "",
-                        weaponType2 = "",
-                        weaponType3 = "",
-                        weaponDescription = "",
-                        semblanceName = "",
-                        semblanceDescription = "",
-                        semblanceStrength = -1,
-                        skillPoints = -1,
-                        currentHealth = -1,
-                        currentAura = -1,
-                        maxAura = -1,
-                        credits = -1,
-                        proficiencyBonus = -1
-                    )
-                }
+                onEvent(CharacterEvent.ResetState)
             }
 
             is CharacterEvent.SetCharacterName -> {
@@ -319,7 +299,8 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
 
             is CharacterEvent.SetCharacterFromName -> {
                 viewModelScope.launch {
-                    val character = characterDao.getCharacterFromCharacterName(event.characterName)
+                    val characterName = _state.first { it.characterName.isNotEmpty() }.characterName
+                    val character = characterDao.getCharacterFromCharacterName(characterName)
 
                     _state.update {
                         it.copy(
@@ -346,6 +327,32 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                     }
                 }
 
+            }
+
+            CharacterEvent.ResetState -> {
+                _state.update {
+                    it.copy(
+                        characterId = 0,
+                        characterName = "",
+                        favourite = false,
+                        species = null,
+                        appearance = "",
+                        weaponName = "",
+                        weaponType1 = "",
+                        weaponType2 = "",
+                        weaponType3 = "",
+                        weaponDescription = "",
+                        semblanceName = "",
+                        semblanceDescription = "",
+                        semblanceStrength = -1,
+                        skillPoints = -1,
+                        currentHealth = -1,
+                        currentAura = -1,
+                        maxAura = -1,
+                        credits = -1,
+                        proficiencyBonus = -1
+                    )
+                }
             }
         }
     }

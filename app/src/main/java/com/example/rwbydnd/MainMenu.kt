@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.rwbydnd.database.CharacterEvent
 import com.example.rwbydnd.database.CharacterState
+import com.example.rwbydnd.database.StatsEvent
 
 class MainMenuScreen {
     @Composable
@@ -122,7 +123,8 @@ class MainMenuScreen {
                         Row(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .animateItem(),
+                                .animateItem()
+                                .padding(10.dp, 0.dp),
                             verticalAlignment = Alignment.CenterVertically
                         )
                         {
@@ -144,8 +146,8 @@ class MainMenuScreen {
                             Box(
                                 modifier = Modifier
                                     .fillMaxHeight()
-                                    .padding(10.dp, 0.dp)
-                                    .weight(1f),
+                                    .weight(1f)
+                                    .padding(10.dp, 0.dp),
                             ) { Text(character.characterName, fontSize = 18.sp) }
                             if(!isEditing)
                             {
@@ -168,12 +170,17 @@ class MainMenuScreen {
                                         onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
                                         navController.navigate(CharacterCreationPg3)
                                     }
+                                    else if(character.skillPoints == -1)
+                                    {
+                                        // has not finished pg4 of character creation
+                                        onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
+                                        navController.navigate(CharacterCreationPg4)
+                                    }
                                 })
                                 {
                                     Icon(
                                         imageVector = Icons.Filled.ChevronRight,
                                         contentDescription = "View character",
-                                        Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
                                     )
                                 }
                             }
@@ -186,7 +193,6 @@ class MainMenuScreen {
                                     Icon(
                                     imageVector = Icons.Outlined.Delete,
                                     contentDescription = "View character",
-                                    Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)
                                     )
                                 }
                             }
@@ -195,7 +201,9 @@ class MainMenuScreen {
                     if(isEditing)
                     {
                         item{
-                            TextButton(onClick = { navController.navigate(CharacterCreationPg1) },)
+                            TextButton(onClick = {
+                                onEvent(CharacterEvent.ResetState)
+                                navController.navigate(CharacterCreationPg1) },)
                             {
                                 Row(
                                     modifier = Modifier

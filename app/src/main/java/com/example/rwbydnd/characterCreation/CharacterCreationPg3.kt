@@ -44,7 +44,18 @@ class CharacterCreatorPg3
             FloatingActionButton(
                 onClick = {
                     onEvent(CharacterEvent.NewCharacter)
-                    navController.navigate(CharacterCreationPg4)
+                    if(state.semblanceStrength == -1)
+                    {
+                        // missing semblance strength
+                    }
+                    else if(state.species == null)
+                    {
+                        // missing species / variant
+                    }
+                    else
+                    {
+                        navController.navigate(CharacterCreationPg4)
+                    }
                 }
             ) {
                 Icon(imageVector = Icons.Outlined.ChevronRight,
