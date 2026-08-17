@@ -36,13 +36,13 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
 
     fun onEvent(event: CharacterEvent)
     {
-        when(event)
-        {
+        when(event) {
             is CharacterEvent.DeleteCharacter -> {
                 viewModelScope.launch {
                     characterDao.deleteCharacter(event.character)
                 }
             }
+
             CharacterEvent.NewCharacter -> {
                 val characterName = state.value.characterName
                 val characterId = state.value.characterId
@@ -64,8 +64,7 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                 val credits = state.value.credits
                 val proficiencyBonus = state.value.proficiencyBonus
 
-                if (characterName.isBlank())
-                {
+                if (characterName.isBlank()) {
                     return
                 }
 
@@ -94,6 +93,7 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                     characterDao.upsertCharacter(character)
                 }
             }
+
             CharacterEvent.NewCharacterWithStateReset -> {
                 val characterName = state.value.characterName
                 val characterId = state.value.characterId
@@ -115,8 +115,7 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                 val credits = state.value.credits
                 val proficiencyBonus = state.value.proficiencyBonus
 
-                if (characterName.isBlank())
-                {
+                if (characterName.isBlank()) {
                     return
                 }
 
@@ -148,9 +147,11 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
             }
 
             is CharacterEvent.SetCharacterName -> {
-                _state.update { it.copy(
-                    characterName = event.characterName
-                ) }
+                _state.update {
+                    it.copy(
+                        characterName = event.characterName
+                    )
+                }
             }
 
             is CharacterEvent.SetFavourite -> {
@@ -183,91 +184,141 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
             }
 
             is CharacterEvent.SetCharacterId -> {
-                _state.update { it.copy(
-                    characterId = event.characterId
-                ) }
+                _state.update {
+                    it.copy(
+                        characterId = event.characterId
+                    )
+                }
             }
 
             is CharacterEvent.SetAppearance -> {
-                _state.update { it.copy(
-                    appearance = event.appearance
-                ) }
+                _state.update {
+                    it.copy(
+                        appearance = event.appearance
+                    )
+                }
             }
+
             is CharacterEvent.SetSpecies -> {
-                _state.update { it.copy(
-                    species = event.species
-                ) }
+                _state.update {
+                    it.copy(
+                        species = event.species
+                    )
+                }
             }
+
             is CharacterEvent.SetCredits -> {
-                _state.update { it.copy(
-                    credits = event.credits
-                ) }
+                _state.update {
+                    it.copy(
+                        credits = event.credits
+                    )
+                }
             }
+
             is CharacterEvent.SetCurrentAura -> {
-                _state.update { it.copy(
-                    currentAura = event.currentAura
-                ) }
+                _state.update {
+                    it.copy(
+                        currentAura = event.currentAura
+                    )
+                }
             }
+
             is CharacterEvent.SetCurrentHealth -> {
-                _state.update { it.copy(
-                    currentHealth = event.currentHealth
-                ) }
+                _state.update {
+                    it.copy(
+                        currentHealth = event.currentHealth
+                    )
+                }
             }
+
             is CharacterEvent.SetMaxAura -> {
-                _state.update { it.copy(
-                    maxAura = event.maxAura
-                ) }
+                _state.update {
+                    it.copy(
+                        maxAura = event.maxAura
+                    )
+                }
             }
+
             is CharacterEvent.SetProficiencyBonus -> {
-                _state.update { it.copy(
-                    proficiencyBonus = event.proficiencyBonus
-                ) }
+                _state.update {
+                    it.copy(
+                        proficiencyBonus = event.proficiencyBonus
+                    )
+                }
             }
+
             is CharacterEvent.SetSemblanceDescription -> {
-                _state.update { it.copy(
-                    semblanceDescription = event.semblanceDescription
-                ) }
+                _state.update {
+                    it.copy(
+                        semblanceDescription = event.semblanceDescription
+                    )
+                }
             }
+
             is CharacterEvent.SetSemblanceName -> {
-                _state.update { it.copy(
-                    semblanceName = event.semblanceName
-                ) }
+                _state.update {
+                    it.copy(
+                        semblanceName = event.semblanceName
+                    )
+                }
             }
+
             is CharacterEvent.SetSemblanceStrength -> {
-                _state.update { it.copy(
-                    semblanceStrength = event.semblanceStrength
-                ) }
+                _state.update {
+                    it.copy(
+                        semblanceStrength = event.semblanceStrength
+                    )
+                }
             }
+
             is CharacterEvent.SetSkillPoints -> {
-                _state.update { it.copy(
-                    skillPoints = event.skillPoints
-                ) }
+                _state.update {
+                    it.copy(
+                        skillPoints = event.skillPoints
+                    )
+                }
             }
+
             is CharacterEvent.SetWeaponDescription -> {
-                _state.update { it.copy(
-                    weaponDescription = event.weaponDescription
-                ) }
+                _state.update {
+                    it.copy(
+                        weaponDescription = event.weaponDescription
+                    )
+                }
             }
+
             is CharacterEvent.SetWeaponName -> {
-                _state.update { it.copy(
-                    weaponName = event.weaponName
-                ) }
+                _state.update {
+                    it.copy(
+                        weaponName = event.weaponName
+                    )
+                }
             }
+
             is CharacterEvent.SetWeaponType1 -> {
-                _state.update { it.copy(
-                    weaponType1 = event.weaponType
-                ) }
+                _state.update {
+                    it.copy(
+                        weaponType1 = event.weaponType
+                    )
+                }
             }
+
             is CharacterEvent.SetWeaponType2 -> {
-                _state.update { it.copy(
-                    weaponType2 = event.weaponType
-                ) }
+                _state.update {
+                    it.copy(
+                        weaponType2 = event.weaponType
+                    )
+                }
             }
+
             is CharacterEvent.SetWeaponType3 -> {
-                _state.update { it.copy(
-                    weaponType3 = event.weaponType
-                ) }
+                _state.update {
+                    it.copy(
+                        weaponType3 = event.weaponType
+                    )
+                }
             }
+
             is CharacterEvent.SetCharacterFromId -> {
                 viewModelScope.launch {
                     val character = characterDao.getCharacterFromId(event.characterId)
@@ -352,6 +403,18 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
                         credits = -1,
                         proficiencyBonus = -1
                     )
+                }
+            }
+
+            CharacterEvent.SetInitialSkillPoints -> {
+                viewModelScope.launch {
+                    val semblanceStrength =
+                        _state.first {it.semblanceStrength != -1 && it.characterId != 0}.semblanceStrength
+                    _state.update {
+                        it.copy(
+                            skillPoints = 40 + semblanceStrength
+                        )
+                    }
                 }
             }
         }

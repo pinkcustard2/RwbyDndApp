@@ -27,8 +27,6 @@ import kotlinx.serialization.Serializable
 // To do:
 // Make so cant have 2 characters of same name at some point
 // Make so species and semblance strength text defaults to correct one when editing character
-// Alert user why they can't go from screen 3 to screen 4
-// Fix switching between two character creation stats screens skill point amount not correctly updating
 class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(

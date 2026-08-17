@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,16 @@ class CharacterCreatorPg1
     @Composable
     fun CharacterCreationPg1(navController: NavController, state: CharacterState, onEvent: (CharacterEvent) -> Unit)
     {
+        LaunchedEffect(Unit) {
+            if(state.characterId != 0 && state.characterName.isEmpty())
+            {
+                onEvent(CharacterEvent.SetCharacterFromId(state.characterId))
+            }
+            else if(state.characterName.isNotEmpty() && state.characterId == 0)
+            {
+                onEvent(CharacterEvent.SetCharacterFromName(state.characterName))
+            }
+        }
         var species by remember { mutableStateOf("Human") }
         var selectedVariant by remember {mutableStateOf("Select Variant")}
         Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {

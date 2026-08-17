@@ -24,12 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.rwbydnd.Species
 import com.example.rwbydnd.database.CharacterEvent
 import com.example.rwbydnd.database.CharacterState
 import com.example.rwbydnd.database.StatsEvent
@@ -46,14 +48,32 @@ class CharacterCreatorPg4 {
     ) {
         LaunchedEffect(Unit) {
             onStatsEvent(StatsEvent.ResetState)
-            onCharacterEvent(CharacterEvent.SetCharacterFromName(characterState.characterName))
+            if(characterState.characterId != 0 && characterState.characterName.isEmpty())
+            {
+                onCharacterEvent(CharacterEvent.SetCharacterFromId(characterState.characterId))
+            }
+            else if(characterState.characterName.isNotEmpty() && characterState.characterId == 0)
+            {
+                onCharacterEvent(CharacterEvent.SetCharacterFromName(characterState.characterName))
+            }
             onStatsEvent(StatsEvent.SetStatsFromId(characterState.characterId))
+            onCharacterEvent(CharacterEvent.SetInitialSkillPoints)
         }
+        var showAlert by remember {mutableStateOf("")}
         Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    //onCharacterEvent(CharacterEvent.NewCharacter)
-                    //navController.navigate(CharacterCreationPg4)
+                    if(characterState.skillPoints == 0)
+                    {
+                        onStatsEvent(StatsEvent.SetCharacterId(characterState.characterId))
+                        onCharacterEvent(CharacterEvent.NewCharacter)
+                        onStatsEvent(StatsEvent.NewStats)
+                        //navController.navigate(CharacterCreationPg4)
+                    }
+                    else
+                    {
+                        showAlert = "you have not spent all skill points"
+                    }
                 }
             ) {
                 Icon(
@@ -64,11 +84,6 @@ class CharacterCreatorPg4 {
         })
         { innerPadding ->
             val scrollState = rememberScrollState()
-            var skillPoints by remember {
-                mutableIntStateOf(
-                    76 + characterState.semblanceStrength - statsState.strength - statsState.dexterity - statsState.intelligence - statsState.wisdom - statsState.constitution - statsState.charisma
-                )
-            }
             val stats = mutableListOf(
                 "Strength" to statsState.strength,
                 "Dexterity" to statsState.dexterity,
@@ -77,7 +92,92 @@ class CharacterCreatorPg4 {
                 "Constitution" to statsState.constitution,
                 "Charisma" to statsState.charisma
             )
-            Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
+            var updatedSpecies by remember {mutableStateOf(false)}
+            if(!updatedSpecies && characterState.species != null)
+            {
+                when(characterState.species)
+                {
+                    Species.HUMAN_STR -> {
+                        onStatsEvent(StatsEvent.SetStrength(statsState.strength + 1))
+                    }
+                    Species.HUMAN_DEX -> {
+                        onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity + 1))
+                    }
+                    Species.HUMAN_INT -> {
+                        onStatsEvent(StatsEvent.SetIntelligence(statsState.intelligence + 1))
+                    }
+                    Species.HUMAN_WIS -> {
+                        onStatsEvent(StatsEvent.SetWisdom(statsState.wisdom + 1))
+                    }
+                    Species.HUMAN_CON -> {
+                        onStatsEvent(StatsEvent.SetConstitution(statsState.constitution + 1))
+                    }
+                    Species.HUMAN_CHA -> {
+                        onStatsEvent(StatsEvent.SetCharisma(statsState.charisma + 1))
+                    }
+                    Species.FAUNUS_STR -> {
+                        onStatsEvent(StatsEvent.SetStrength(statsState.strength + 3))
+                        onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
+                        onStatsEvent(StatsEvent.SetIntelligence(statsState.intelligence - 1))
+                        onStatsEvent(StatsEvent.SetWisdom(statsState.wisdom - 1))
+                        onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
+                        onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
+                    }
+                    Species.FAUNUS_DEX -> {
+                        onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
+                        onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity + 3))
+                        onStatsEvent(StatsEvent.SetIntelligence(statsState.intelligence - 1))
+                        onStatsEvent(StatsEvent.SetWisdom(statsState.wisdom - 1))
+                        onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
+                        onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
+                    }
+                    Species.FAUNUS_INT -> {
+                        onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
+                        onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
+                        onStatsEvent(StatsEvent.SetIntelligence(statsState.intelligence + 3))
+                        onStatsEvent(StatsEvent.SetWisdom(statsState.wisdom - 1))
+                        onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
+                        onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
+                    }
+                    Species.FAUNUS_WIS -> {
+                        onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
+                        onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
+                        onStatsEvent(StatsEvent.SetIntelligence(statsState.intelligence - 1))
+                        onStatsEvent(StatsEvent.SetWisdom(statsState.wisdom + 3))
+                        onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
+                        onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
+                    }
+                    Species.FAUNUS_CON -> {
+                        onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
+                        onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
+                        onStatsEvent(StatsEvent.SetIntelligence(statsState.intelligence - 1))
+                        onStatsEvent(StatsEvent.SetWisdom(statsState.wisdom - 1))
+                        onStatsEvent(StatsEvent.SetConstitution(statsState.constitution + 3))
+                        onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
+                    }
+                    Species.FAUNUS_CHA -> {
+                        onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
+                        onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
+                        onStatsEvent(StatsEvent.SetIntelligence(statsState.intelligence - 1))
+                        onStatsEvent(StatsEvent.SetWisdom(statsState.wisdom - 1))
+                        onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
+                        onStatsEvent(StatsEvent.SetCharisma(statsState.charisma + 3))
+                    }
+                    Species.FAUNUS_NV -> {}
+                }
+
+                updatedSpecies = true
+            }
+            if(showAlert.isNotEmpty())
+            {
+                CharacterCreationAlert().CharacterCreatorAlert(
+                    alertText = showAlert,
+                    onDismiss = {showAlert = ""}
+                )
+            }
+            Column(Modifier
+                .padding(innerPadding)
+                .verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
                 {
@@ -86,7 +186,9 @@ class CharacterCreatorPg4 {
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
-                    Column(Modifier.padding(25.dp, 0.dp, 25.dp, 0.dp).fillMaxWidth())
+                    Column(Modifier
+                        .padding(25.dp, 0.dp, 25.dp, 0.dp)
+                        .fillMaxWidth())
                     {
                         stats.forEach { (name, value) ->
                         Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically)
@@ -111,7 +213,7 @@ class CharacterCreatorPg4 {
                                         "Charisma" -> onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
                                     }
 
-                                    skillPoints += 1
+                                    onCharacterEvent(CharacterEvent.SetSkillPoints(characterState.skillPoints + 1))
                                 }
                             }) {
                                 Icon(
@@ -120,7 +222,7 @@ class CharacterCreatorPg4 {
                                 )
                             }
                             IconButton(onClick = {
-                                if(skillPoints > 0 && value < 20)
+                                if(characterState.skillPoints > 0 && value < 20)
                                 {
                                     when(name)
                                     {
@@ -132,7 +234,7 @@ class CharacterCreatorPg4 {
                                         "Charisma" -> onStatsEvent(StatsEvent.SetCharisma(statsState.charisma + 1))
                                     }
 
-                                    skillPoints -= 1
+                                    onCharacterEvent(CharacterEvent.SetSkillPoints(characterState.skillPoints - 1))
                                 }
                             }) {
                                 Icon(
@@ -145,7 +247,7 @@ class CharacterCreatorPg4 {
                 }
                 Box(Modifier.padding(20.dp, 0.dp))
                 {
-                    Text(text = "Skill Points: $skillPoints")
+                    Text(text = "Skill Points: ${characterState.skillPoints}")
                 }
             }
         }

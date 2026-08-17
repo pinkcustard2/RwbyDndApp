@@ -31,7 +31,14 @@ class CharacterCreatorPg2
     @Composable
     fun CharacterCreationPg2(navController: NavController, state: CharacterState, onEvent: (CharacterEvent) -> Unit) {
         LaunchedEffect(Unit) {
-            onEvent(CharacterEvent.SetCharacterFromName(state.characterName))
+            if(state.characterId != 0 && state.characterName.isEmpty())
+            {
+                onEvent(CharacterEvent.SetCharacterFromId(state.characterId))
+            }
+            else if(state.characterName.isNotEmpty() && state.characterId == 0)
+            {
+                onEvent(CharacterEvent.SetCharacterFromName(state.characterName))
+            }
         }
         Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
             FloatingActionButton(

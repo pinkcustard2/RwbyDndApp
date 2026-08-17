@@ -26,30 +26,30 @@ class StatsViewModel(private val statsDao: StatsDao): ViewModel()
         when(event)
         {
             StatsEvent.NewStats -> {
-                val characterId = state.value.characterId
-                val strength = state.value.strength
-                val dexterity = state.value.dexterity
-                val intelligence = state.value.intelligence
-                val wisdom = state.value.wisdom
-                val constitution = state.value.constitution
-                val charisma = state.value.charisma
-
-                if (characterId == 0)
-                {
-                    return
-                }
-
-                val stats = Stats(
-                    characterId = characterId,
-                    strength = strength,
-                    dexterity = dexterity,
-                    intelligence = intelligence,
-                    wisdom = wisdom,
-                    constitution = constitution,
-                    charisma = charisma
-                )
-
                 viewModelScope.launch {
+                    val characterId = _state.first {it.characterId != 0}.characterId
+                    val strength = state.value.strength
+                    val dexterity = state.value.dexterity
+                    val intelligence = state.value.intelligence
+                    val wisdom = state.value.wisdom
+                    val constitution = state.value.constitution
+                    val charisma = state.value.charisma
+
+                    if (characterId == 0)
+                    {
+                        return@launch
+                    }
+
+                    val stats = Stats(
+                        characterId = characterId,
+                        strength = strength,
+                        dexterity = dexterity,
+                        intelligence = intelligence,
+                        wisdom = wisdom,
+                        constitution = constitution,
+                        charisma = charisma
+                    )
+
                     statsDao.upsertStats(stats)
                 }
             }

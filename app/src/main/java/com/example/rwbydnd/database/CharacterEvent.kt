@@ -27,7 +27,7 @@ sealed interface CharacterEvent
     data class SetProficiencyBonus(val proficiencyBonus: Int): CharacterEvent
     data class SetCharacterId(val characterId: Int): CharacterEvent
     data class DeleteCharacter(val character: Character): CharacterEvent
-
     data class SetCharacterFromName(val characterName: String): CharacterEvent
     data class SetCharacterFromId(val characterId: Int): CharacterEvent
+    object SetInitialSkillPoints: CharacterEvent
 }

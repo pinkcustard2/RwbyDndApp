@@ -50,12 +50,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.rwbydnd.database.CharacterEvent
 import com.example.rwbydnd.database.CharacterState
-import com.example.rwbydnd.database.StatsEvent
 
 class MainMenuScreen {
     @Composable
     fun MainScreen(navController: NavController, state: CharacterState, onEvent: (CharacterEvent) -> Unit)
     {
+        LaunchedEffect(Unit) {
+            onEvent(CharacterEvent.ResetState)
+        }
         val tabItems = listOf(
             Tab(title = "Characters"),
             Tab(title = "Rules")
@@ -68,20 +70,25 @@ class MainMenuScreen {
         LaunchedEffect(pagerState.currentPage) { selectedTab = pagerState.currentPage }
 
         Scaffold(modifier = Modifier.fillMaxSize(),
-            floatingActionButton = {FloatingActionButton(
-                onClick = {
-                    isEditing = !isEditing
-                },
-            ) {
-                if(!isEditing)
+            floatingActionButton = {
+                if(selectedTab == 0)
                 {
-                    Icon(Icons.Outlined.Edit, "Floating action button.")
-                }
-                else
-                {
-                    Icon(Icons.Outlined.Close, "Floating action button.")
-                }
-            }}
+                    FloatingActionButton(
+                        onClick = {
+                            isEditing = !isEditing
+                        },
+                    ) {
+                        if(!isEditing)
+                        {
+                            Icon(Icons.Outlined.Edit, "Floating action button.")
+                        }
+                        else
+                        {
+                            Icon(Icons.Outlined.Close, "Floating action button.")
+                        }
+                    }
+                }}
+
         )
         { innerPadding ->
             SecondaryTabRow(selectedTab, modifier = Modifier.padding(innerPadding)) {
@@ -155,25 +162,25 @@ class MainMenuScreen {
                                     if(character.species == null)
                                     {
                                         // has not finished pg1 of character creation
-                                        onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
+                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
                                         navController.navigate(CharacterCreationPg1)
                                     }
                                     else if(character.weaponName == "" || character.weaponType1 == "" || character.weaponType2 == "")
                                     {
                                         // has not finished pg2 of character creation
-                                        onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
+                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
                                         navController.navigate(CharacterCreationPg2)
                                     }
                                     else if(character.semblanceName == "" || character.semblanceStrength == -1)
                                     {
                                         // has not finished pg3 of character creation
-                                        onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
+                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
                                         navController.navigate(CharacterCreationPg3)
                                     }
                                     else if(character.skillPoints == -1)
                                     {
                                         // has not finished pg4 of character creation
-                                        onEvent(CharacterEvent.SetCharacterFromId(character.characterId))
+                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
                                         navController.navigate(CharacterCreationPg4)
                                     }
                                 })

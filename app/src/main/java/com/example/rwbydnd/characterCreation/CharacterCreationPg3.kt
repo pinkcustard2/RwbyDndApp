@@ -38,19 +38,31 @@ class CharacterCreatorPg3
     @Composable
     fun CharacterCreationPg3(navController: NavController, state: CharacterState, onEvent: (CharacterEvent) -> Unit) {
         LaunchedEffect(Unit) {
-            onEvent(CharacterEvent.SetCharacterFromName(state.characterName))
+            if(state.characterId != 0 && state.characterName.isEmpty())
+            {
+                onEvent(CharacterEvent.SetCharacterFromId(state.characterId))
+            }
+            else if(state.characterName.isNotEmpty() && state.characterId == 0)
+            {
+                onEvent(CharacterEvent.SetCharacterFromName(state.characterName))
+            }
         }
+        var showAlert by remember {mutableStateOf("")}
         Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     onEvent(CharacterEvent.NewCharacter)
-                    if(state.semblanceStrength == -1)
+                    if(state.semblanceStrength == -1 && state.species == null)
                     {
-                        // missing semblance strength
+                        showAlert = "character species/varient and semblance strength have not been selected"
+                    }
+                    else if(state.semblanceStrength == -1)
+                    {
+                        showAlert = "semblance strength has not been selected"
                     }
                     else if(state.species == null)
                     {
-                        // missing species / variant
+                        showAlert = "character species/varient has not been selected"
                     }
                     else
                     {
@@ -64,6 +76,13 @@ class CharacterCreatorPg3
         })
         { innerPadding ->
             val scrollState = rememberScrollState()
+            if(showAlert.isNotEmpty())
+            {
+                CharacterCreationAlert().CharacterCreatorAlert(
+                    alertText = showAlert,
+                    onDismiss = {showAlert = ""}
+                )
+            }
             Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
