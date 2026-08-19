@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,11 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.rwbydnd.CharacterCreationPg5
 import com.example.rwbydnd.Species
-import com.example.rwbydnd.database.CharacterEvent
-import com.example.rwbydnd.database.CharacterState
-import com.example.rwbydnd.database.StatsEvent
-import com.example.rwbydnd.database.StatsState
+import com.example.rwbydnd.database.character.CharacterEvent
+import com.example.rwbydnd.database.character.CharacterState
+import com.example.rwbydnd.database.stats.StatsEvent
+import com.example.rwbydnd.database.stats.StatsState
 
 class CharacterCreatorPg4 {
     @Composable
@@ -68,7 +68,7 @@ class CharacterCreatorPg4 {
                         onStatsEvent(StatsEvent.SetCharacterId(characterState.characterId))
                         onCharacterEvent(CharacterEvent.NewCharacter)
                         onStatsEvent(StatsEvent.NewStats)
-                        //navController.navigate(CharacterCreationPg4)
+                        navController.navigate(CharacterCreationPg5)
                     }
                     else
                     {

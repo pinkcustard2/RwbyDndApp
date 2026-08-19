@@ -48,8 +48,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.rwbydnd.database.CharacterEvent
-import com.example.rwbydnd.database.CharacterState
+import com.example.rwbydnd.database.character.CharacterEvent
+import com.example.rwbydnd.database.character.CharacterState
 
 class MainMenuScreen {
     @Composable
@@ -182,6 +182,12 @@ class MainMenuScreen {
                                         // has not finished pg4 of character creation
                                         onEvent(CharacterEvent.SetCharacterId(character.characterId))
                                         navController.navigate(CharacterCreationPg4)
+                                    }
+                                    else if(character.proficiencyBonus == -1)
+                                    {
+                                        // has not finished pg5 of character creation
+                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                        navController.navigate(CharacterCreationPg5)
                                     }
                                 })
                                 {

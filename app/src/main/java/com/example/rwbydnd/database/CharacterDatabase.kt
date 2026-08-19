@@ -2,6 +2,9 @@ package com.example.rwbydnd.database
 
 import androidx.room3.Database
 import androidx.room3.RoomDatabase
+import com.example.rwbydnd.database.character.CharacterDao
+import com.example.rwbydnd.database.proficiency.ProficiencyDao
+import com.example.rwbydnd.database.stats.StatsDao
 
 @Database(
     entities = [Character::class, Stats::class, Proficiencies::class],

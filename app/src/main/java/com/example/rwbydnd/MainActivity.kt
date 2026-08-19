@@ -17,9 +17,11 @@ import com.example.rwbydnd.characterCreation.CharacterCreatorPg1
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg2
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg3
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg4
+import com.example.rwbydnd.characterCreation.CharacterCreatorPg5
 import com.example.rwbydnd.database.CharacterDatabase
 import com.example.rwbydnd.ui.theme.RwbydndTheme
 import com.example.rwbydnd.viewmodels.CharacterViewModel
+import com.example.rwbydnd.viewmodels.ProficiencyViewModel
 import com.example.rwbydnd.viewmodels.StatsViewModel
 import kotlinx.serialization.Serializable
 
@@ -57,6 +59,16 @@ class MainActivity : ComponentActivity() {
         }
     )
 
+    private val proficiencyViewModel by viewModels<ProficiencyViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return ProficiencyViewModel(db.proficiencyDao) as T
+                }
+            }
+        }
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -65,6 +77,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val characterState by characterViewModel.state.collectAsState()
                 val statsState by statsViewModel.state.collectAsState()
+                val proficiencyState by proficiencyViewModel.state.collectAsState()
 
                 NavHost(
                     navController = navController,
@@ -111,6 +124,16 @@ class MainActivity : ComponentActivity() {
                             statsState,
                             characterViewModel::onEvent,
                             statsViewModel::onEvent
+                        )
+                    }
+                    composable<CharacterCreationPg5>
+                    {
+                        CharacterCreatorPg5().CharacterCreationPg5(
+                            navController,
+                            characterState,
+                            proficiencyState,
+                            characterViewModel::onEvent,
+                            proficiencyViewModel::onEvent
                         )
                     }
                 }

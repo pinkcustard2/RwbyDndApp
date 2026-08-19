@@ -36,8 +36,8 @@ import androidx.compose.ui.semantics.Role.Companion.RadioButton
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.rwbydnd.CharacterCreationPg2
-import com.example.rwbydnd.database.CharacterEvent
-import com.example.rwbydnd.database.CharacterState
+import com.example.rwbydnd.database.character.CharacterEvent
+import com.example.rwbydnd.database.character.CharacterState
 import com.example.rwbydnd.Species
 
 class CharacterCreatorPg1

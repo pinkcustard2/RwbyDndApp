@@ -1,9 +1,10 @@
-package com.example.rwbydnd.database
+package com.example.rwbydnd.database.character
 
 import androidx.room3.Dao
 import androidx.room3.Delete
 import androidx.room3.Query
 import androidx.room3.Upsert
+import com.example.rwbydnd.database.Character
 import kotlinx.coroutines.flow.Flow
 
 @Dao

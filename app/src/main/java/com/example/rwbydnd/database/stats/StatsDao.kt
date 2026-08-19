@@ -1,8 +1,9 @@
-package com.example.rwbydnd.database
+package com.example.rwbydnd.database.stats
 
 import androidx.room3.Dao
 import androidx.room3.Query
 import androidx.room3.Upsert
+import com.example.rwbydnd.database.Stats
 
 @Dao
 interface StatsDao

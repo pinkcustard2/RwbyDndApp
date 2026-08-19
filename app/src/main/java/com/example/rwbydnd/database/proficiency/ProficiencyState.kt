@@ -1,4 +1,4 @@
-package com.example.rwbydnd.database
+package com.example.rwbydnd.database.proficiency
 
 data class ProficiencyState(
     val characterId: Int = 0,

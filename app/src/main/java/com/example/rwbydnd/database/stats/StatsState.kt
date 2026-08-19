@@ -1,4 +1,4 @@
-package com.example.rwbydnd.database
+package com.example.rwbydnd.database.stats
 
 data class StatsState (
     val characterId: Int = 0,

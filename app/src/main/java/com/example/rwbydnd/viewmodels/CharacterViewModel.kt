@@ -3,10 +3,9 @@ package com.example.rwbydnd.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rwbydnd.database.Character
-import com.example.rwbydnd.database.CharacterDao
-import com.example.rwbydnd.database.CharacterEvent
-import com.example.rwbydnd.database.CharacterState
-import com.example.rwbydnd.database.StatsEvent
+import com.example.rwbydnd.database.character.CharacterDao
+import com.example.rwbydnd.database.character.CharacterEvent
+import com.example.rwbydnd.database.character.CharacterState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first

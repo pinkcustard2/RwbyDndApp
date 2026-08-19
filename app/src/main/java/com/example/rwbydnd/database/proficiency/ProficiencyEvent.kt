@@ -1,4 +1,4 @@
-package com.example.rwbydnd.database
+package com.example.rwbydnd.database.proficiency
 
 sealed interface ProficiencyEvent {
     object newProficiency: ProficiencyEvent

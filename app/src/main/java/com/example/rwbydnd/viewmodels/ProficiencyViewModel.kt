@@ -3,9 +3,9 @@ package com.example.rwbydnd.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rwbydnd.database.Proficiencies
-import com.example.rwbydnd.database.ProficiencyDao
-import com.example.rwbydnd.database.ProficiencyEvent
-import com.example.rwbydnd.database.ProficiencyState
+import com.example.rwbydnd.database.proficiency.ProficiencyDao
+import com.example.rwbydnd.database.proficiency.ProficiencyEvent
+import com.example.rwbydnd.database.proficiency.ProficiencyState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
