@@ -51,9 +51,43 @@ data class Stats
         var charisma: Int
 )
 
+@Entity(tableName = "Proficiencies",
+        foreignKeys = [
+                ForeignKey(
+                        entity = Character::class,
+                        parentColumns = ["characterId"],
+                        childColumns = ["characterId"],
+                        onDelete = ForeignKey.CASCADE
+                )
+        ])
 data class Proficiencies
 (
-        var characterId: Int
+        @PrimaryKey
+        var characterId: Int,
+        var strength: Boolean,
+        var athletics: Boolean,
+        var dexterity: Boolean,
+        var acrobatics: Boolean,
+        var sleightOfHand: Boolean,
+        var stealth: Boolean,
+        var intelligence: Boolean,
+        var arcana: Boolean,
+        var history: Boolean,
+        var investigation: Boolean,
+        var nature: Boolean,
+        var religion: Boolean,
+        var wisdom: Boolean,
+        var animalHandling: Boolean,
+        var insight: Boolean,
+        var medicine: Boolean,
+        var perception: Boolean,
+        var survival: Boolean,
+        var constitution: Boolean,
+        var charisma: Boolean,
+        var deception: Boolean,
+        var intimidation: Boolean,
+        var performance: Boolean,
+        var persuasion: Boolean
 )
 
 data class Backstory

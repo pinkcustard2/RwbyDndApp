@@ -46,6 +46,10 @@ class CharacterCreatorPg3
             {
                 onEvent(CharacterEvent.SetCharacterFromName(state.characterName))
             }
+            if(state.skillPoints != -1)
+            {
+                onEvent(CharacterEvent.SetSkillPoints(-1))
+            }
         }
         var showAlert by remember {mutableStateOf("")}
         Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {

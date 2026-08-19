@@ -93,28 +93,44 @@ class CharacterCreatorPg4 {
                 "Charisma" to statsState.charisma
             )
             var updatedSpecies by remember {mutableStateOf(false)}
+            if(
+                statsState.strength == 6 &&
+                statsState.dexterity == 6 &&
+                statsState.wisdom == 6 &&
+                statsState.intelligence == 6 &&
+                statsState.constitution == 6 &&
+                statsState.charisma == 6 &&
+                characterState.species != Species.FAUNUS_NV &&
+                characterState.skillPoints == (40 + characterState.semblanceStrength)
+            ) {updatedSpecies = false}
+
             if(!updatedSpecies && characterState.species != null)
             {
-                when(characterState.species)
-                {
+                when(characterState.species) {
                     Species.HUMAN_STR -> {
                         onStatsEvent(StatsEvent.SetStrength(statsState.strength + 1))
                     }
+
                     Species.HUMAN_DEX -> {
                         onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity + 1))
                     }
+
                     Species.HUMAN_INT -> {
                         onStatsEvent(StatsEvent.SetIntelligence(statsState.intelligence + 1))
                     }
+
                     Species.HUMAN_WIS -> {
                         onStatsEvent(StatsEvent.SetWisdom(statsState.wisdom + 1))
                     }
+
                     Species.HUMAN_CON -> {
                         onStatsEvent(StatsEvent.SetConstitution(statsState.constitution + 1))
                     }
+
                     Species.HUMAN_CHA -> {
                         onStatsEvent(StatsEvent.SetCharisma(statsState.charisma + 1))
                     }
+
                     Species.FAUNUS_STR -> {
                         onStatsEvent(StatsEvent.SetStrength(statsState.strength + 3))
                         onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
@@ -123,6 +139,7 @@ class CharacterCreatorPg4 {
                         onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
                         onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
                     }
+
                     Species.FAUNUS_DEX -> {
                         onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
                         onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity + 3))
@@ -131,6 +148,7 @@ class CharacterCreatorPg4 {
                         onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
                         onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
                     }
+
                     Species.FAUNUS_INT -> {
                         onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
                         onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
@@ -139,6 +157,7 @@ class CharacterCreatorPg4 {
                         onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
                         onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
                     }
+
                     Species.FAUNUS_WIS -> {
                         onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
                         onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
@@ -147,6 +166,7 @@ class CharacterCreatorPg4 {
                         onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
                         onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
                     }
+
                     Species.FAUNUS_CON -> {
                         onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
                         onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
@@ -155,6 +175,7 @@ class CharacterCreatorPg4 {
                         onStatsEvent(StatsEvent.SetConstitution(statsState.constitution + 3))
                         onStatsEvent(StatsEvent.SetCharisma(statsState.charisma - 1))
                     }
+
                     Species.FAUNUS_CHA -> {
                         onStatsEvent(StatsEvent.SetStrength(statsState.strength - 1))
                         onStatsEvent(StatsEvent.SetDexterity(statsState.dexterity - 1))
@@ -163,6 +184,7 @@ class CharacterCreatorPg4 {
                         onStatsEvent(StatsEvent.SetConstitution(statsState.constitution - 1))
                         onStatsEvent(StatsEvent.SetCharisma(statsState.charisma + 3))
                     }
+
                     Species.FAUNUS_NV -> {}
                 }
 

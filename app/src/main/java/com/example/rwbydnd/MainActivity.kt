@@ -27,6 +27,7 @@ import kotlinx.serialization.Serializable
 // To do:
 // Make so cant have 2 characters of same name at some point
 // Make so species and semblance strength text defaults to correct one when editing character
+// Back and cancel button on each character creation screen
 class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(
