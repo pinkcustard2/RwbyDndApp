@@ -56,7 +56,6 @@ class CharacterCreatorPg4 {
             {
                 onCharacterEvent(CharacterEvent.SetCharacterFromName(characterState.characterName))
             }
-            onStatsEvent(StatsEvent.SetStatsFromId(characterState.characterId))
             onCharacterEvent(CharacterEvent.SetInitialSkillPoints)
         }
         var showAlert by remember {mutableStateOf("")}
@@ -72,7 +71,7 @@ class CharacterCreatorPg4 {
                     }
                     else
                     {
-                        showAlert = "you have not spent all skill points"
+                        showAlert = "you have not allocated all skill points"
                     }
                 }
             ) {
@@ -208,6 +207,10 @@ class CharacterCreatorPg4 {
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
+                Box(Modifier.padding(20.dp, top = 10.dp))
+                {
+                    Text(text = "Skill Points: ${characterState.skillPoints}")
+                }
                     Column(Modifier
                         .padding(25.dp, 0.dp, 25.dp, 0.dp)
                         .fillMaxWidth())
@@ -266,10 +269,6 @@ class CharacterCreatorPg4 {
                             }
                         }
                     }
-                }
-                Box(Modifier.padding(20.dp, 0.dp))
-                {
-                    Text(text = "Skill Points: ${characterState.skillPoints}")
                 }
             }
         }

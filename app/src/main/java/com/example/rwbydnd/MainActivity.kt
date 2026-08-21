@@ -132,8 +132,10 @@ class MainActivity : ComponentActivity() {
                             navController,
                             characterState,
                             proficiencyState,
+                            statsState,
                             characterViewModel::onEvent,
-                            proficiencyViewModel::onEvent
+                            proficiencyViewModel::onEvent,
+                            statsViewModel::onEvent
                         )
                     }
                 }
