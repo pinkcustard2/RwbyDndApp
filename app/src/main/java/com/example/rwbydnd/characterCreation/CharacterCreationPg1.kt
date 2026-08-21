@@ -20,6 +20,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role.Companion.RadioButton
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -57,11 +59,19 @@ class CharacterCreatorPg1
         }
         var species by remember { mutableStateOf("Human") }
         var selectedVariant by remember {mutableStateOf("Select Variant")}
+        var showError by remember {mutableStateOf("")}
         Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    onEvent(CharacterEvent.NewCharacter)
-                    navController.navigate(CharacterCreationPg2)
+                    if(state.characters.any{it.characterName == state.characterName})
+                    {
+                        showError = "character with this name already exists"
+                    }
+                    else
+                    {
+                        onEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(CharacterCreationPg2)
+                    }
                 }
             ) {
                 Icon(imageVector = Icons.Outlined.ChevronRight,
@@ -70,6 +80,13 @@ class CharacterCreatorPg1
         })
         { innerPadding ->
             val scrollState = rememberScrollState()
+            if(showError.isNotEmpty())
+            {
+                CharacterCreationAlert().CharacterCreatorError(
+                    errorText = showError,
+                    onDismiss = {showError = ""}
+                )
+            }
             Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
@@ -77,17 +94,35 @@ class CharacterCreatorPg1
                     Text(text = "Step 1 - Name and Appearance",
                         style = MaterialTheme.typography.titleLarge)
                 }
+                var labelText by remember {mutableStateOf("Character Name")}
+                var error by remember {mutableStateOf(false)}
                 OutlinedTextField(
                     modifier = Modifier.padding(25.dp, 0.dp, 25.dp, 0.dp).fillMaxWidth(),
                     value = state.characterName,
                     onValueChange = {
-                        onEvent(CharacterEvent.SetCharacterName(it))
+                        val name = it
+                        if(state.characters.any{it.characterName == name})
+                        {
+                            labelText = "Character with same name already exists"
+                            error = true
+                            onEvent(CharacterEvent.SetCharacterName(it))
+                        }
+                        else
+                        {
+                            labelText = "Character Name"
+                            error = false
+                            onEvent(CharacterEvent.SetCharacterName(it))
+                        }
                     },
                     placeholder = {
                         Text(text = "Character Name")
                     },
-                    label = {Text(text = "Character Name")},
-                    singleLine = true
+                    isError = error,
+                    label = {Text(text = labelText)},
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        errorBorderColor = Color.Red
+                    )
                 )
                 Row(
                     Modifier.fillMaxWidth()

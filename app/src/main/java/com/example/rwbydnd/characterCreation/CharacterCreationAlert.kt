@@ -17,4 +17,15 @@ class CharacterCreationAlert
             text = {Text("Cannot continue as $alertText")}
         )
     }
+
+    @Composable
+    fun CharacterCreatorError(errorText: String, onDismiss: () -> Unit)
+    {
+        AlertDialog(
+            confirmButton = { TextButton(onClick = { onDismiss() }) {Text("Return")} },
+            onDismissRequest = { onDismiss() },
+            title = {Text("Error Creating Character")},
+            text = {Text("Cannot create character as $errorText")}
+        )
+    }
 }
