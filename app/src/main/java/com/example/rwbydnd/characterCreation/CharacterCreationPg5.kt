@@ -64,19 +64,17 @@ class CharacterCreatorPg5 {
             } else if (characterState.characterName.isNotEmpty() && characterState.characterId == 0) {
                 onCharacterEvent(CharacterEvent.SetCharacterFromName(characterState.characterName))
             }
-            onStatsEvent(StatsEvent.SetStatsFromId(characterState.characterId))
+            onStatsEvent(StatsEvent.ResetState)
+            onProficiencyEvent(ProficiencyEvent.SetCharacterId(characterState.characterId))
+            onProficiencyEvent(ProficiencyEvent.SetProficiencyFromId)
         }
         var loadedStats by remember {mutableStateOf(false)}
+        var loadedProficiencies by remember{mutableStateOf(false)}
         var savingThrows by remember{ mutableIntStateOf(2) }
         var proficienciesLeft by remember{ mutableIntStateOf(4) }
         var showAlert by remember {mutableStateOf("")}
         Scaffold(modifier = Modifier.fillMaxSize())
         { innerPadding ->
-            if (!loadedStats && characterState.characterId != 0)
-            {
-                onStatsEvent(StatsEvent.SetStatsFromId(characterState.characterId))
-                loadedStats = true
-            }
             val scrollState = rememberScrollState()
             val proficiencies = mutableListOf(
                 "Strength Saving Throw" to proficiencyState.strength,
@@ -104,6 +102,25 @@ class CharacterCreatorPg5 {
                 "Performance" to proficiencyState.performance,
                 "Persuasion" to proficiencyState.persuasion
             )
+            if (!loadedStats && characterState.characterId != 0)
+            {
+                onStatsEvent(StatsEvent.SetCharacterId(characterState.characterId))
+                onStatsEvent(StatsEvent.SetStatsFromId)
+                loadedStats = true
+            }
+            if(!loadedProficiencies && loadedStats && proficiencyState.characterId != 0&& (statsState.strength != 6 || statsState.dexterity != 6 || statsState.intelligence != 6 || statsState.wisdom != 6 || statsState.constitution != 6 || statsState.charisma != 6))
+            {
+                for(proficiency in proficiencies)
+                {
+                    if(proficiency.component2())
+                    {
+                        savingThrows = 0
+                        proficienciesLeft = 0
+                    }
+                }
+
+                loadedProficiencies = true
+            }
             if(showAlert.isNotEmpty())
             {
                 CharacterCreationAlert().CharacterCreatorAlert(
@@ -125,7 +142,9 @@ class CharacterCreatorPg5 {
                     text = {Text("Are you sure you want to return home (entered data will be saved)")}
                 )
             }
-            Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
+            Column(Modifier
+                .padding(innerPadding)
+                .verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
                 {
@@ -324,7 +343,7 @@ class CharacterCreatorPg5 {
                             onCharacterEvent(CharacterEvent.SetProficiencyBonus(2))
                             onCharacterEvent(CharacterEvent.NewCharacter)
                             onProficiencyEvent(ProficiencyEvent.SetCharacterId(characterState.characterId))
-                            onProficiencyEvent(ProficiencyEvent.newProficiency)
+                            onProficiencyEvent(ProficiencyEvent.NewProficiency)
                             //navController.navigate(CharacterCreationPg2)
                         }
                         else

@@ -66,6 +66,8 @@ class CharacterCreatorPg4 {
                 onCharacterEvent(CharacterEvent.SetCharacterFromName(characterState.characterName))
             }
             onCharacterEvent(CharacterEvent.SetInitialSkillPoints)
+            onStatsEvent(StatsEvent.SetCharacterId(characterState.characterId))
+            onStatsEvent(StatsEvent.SetStatsFromId)
         }
         var showAlert by remember {mutableStateOf("")}
         Scaffold(modifier = Modifier.fillMaxSize())

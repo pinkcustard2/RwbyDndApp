@@ -6,6 +6,7 @@ import com.example.rwbydnd.database.Proficiencies
 import com.example.rwbydnd.database.proficiency.ProficiencyDao
 import com.example.rwbydnd.database.proficiency.ProficiencyEvent
 import com.example.rwbydnd.database.proficiency.ProficiencyState
+import com.example.rwbydnd.database.stats.StatsEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -149,7 +150,7 @@ class ProficiencyViewModel(private val proficiencyDao: ProficiencyDao) : ViewMod
                     wisdom = event.wisdom
                 ) }
             }
-            ProficiencyEvent.newProficiency -> viewModelScope.launch {
+            ProficiencyEvent.NewProficiency -> viewModelScope.launch {
                 val characterId = _state.first {it.characterId != 0}.characterId
                 val strength = state.value.strength
                 val athletics = state.value.athletics
@@ -211,7 +212,7 @@ class ProficiencyViewModel(private val proficiencyDao: ProficiencyDao) : ViewMod
 
                 proficiencyDao.upsertProficiencies(proficiencies)
             }
-            ProficiencyEvent.resetState -> {
+            ProficiencyEvent.ResetState -> {
                 _state.update {
                     it.copy(
                         characterId = 0,
@@ -240,6 +241,47 @@ class ProficiencyViewModel(private val proficiencyDao: ProficiencyDao) : ViewMod
                         performance = false,
                         persuasion = false
                     )
+                }
+            }
+
+            ProficiencyEvent.SetProficiencyFromId -> {
+                viewModelScope.launch {
+                    val characterId = _state.first { it.characterId != 0 }.characterId
+                    val proficiencies = proficiencyDao.getProficienciesFromId(characterId)
+                    if (proficiencies != null) {
+                        _state.update {
+                            it.copy(
+                                characterId = proficiencies.characterId,
+                                strength = proficiencies.strength,
+                                dexterity = proficiencies.dexterity,
+                                intelligence = proficiencies.intelligence,
+                                wisdom = proficiencies.wisdom,
+                                constitution = proficiencies.constitution,
+                                charisma = proficiencies.charisma,
+                                athletics = proficiencies.athletics,
+                                acrobatics = proficiencies.acrobatics,
+                                sleightOfHand = proficiencies.sleightOfHand,
+                                stealth = proficiencies.stealth,
+                                arcana = proficiencies.arcana,
+                                history = proficiencies.history,
+                                investigation = proficiencies.investigation,
+                                nature = proficiencies.nature,
+                                religion = proficiencies.religion,
+                                animalHandling = proficiencies.animalHandling,
+                                insight = proficiencies.insight,
+                                medicine = proficiencies.medicine,
+                                perception = proficiencies.perception,
+                                survival = proficiencies.survival,
+                                deception = proficiencies.deception,
+                                intimidation = proficiencies.intimidation,
+                                performance = proficiencies.performance,
+                                persuasion = proficiencies.persuasion
+                            )
+                        }
+                    } else
+                    {
+                        onEvent(ProficiencyEvent.ResetState)
+                    }
                 }
             }
         }

@@ -28,7 +28,6 @@ import kotlinx.serialization.Serializable
 
 // To do:
 // Make so species and semblance strength text defaults to correct one when editing character
-// Stats don't load when going back to stats screen after assigning stats
 class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(

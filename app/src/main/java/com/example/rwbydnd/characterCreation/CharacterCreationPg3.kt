@@ -56,7 +56,7 @@ class CharacterCreatorPg3
             {
                 onEvent(CharacterEvent.SetCharacterFromName(state.characterName))
             }
-            if(state.skillPoints != -1)
+            if(state.skillPoints != -1 && state.skillPoints != 0)
             {
                 onEvent(CharacterEvent.SetSkillPoints(-1))
             }

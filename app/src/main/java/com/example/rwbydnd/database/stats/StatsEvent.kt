@@ -11,5 +11,5 @@ sealed interface StatsEvent
     data class SetWisdom(val wisdom: Int): StatsEvent
     data class SetConstitution(val constitution: Int): StatsEvent
     data class SetCharisma(val charisma: Int): StatsEvent
-    data class SetStatsFromId(val characterId: Int): StatsEvent
+    object SetStatsFromId: StatsEvent
 }

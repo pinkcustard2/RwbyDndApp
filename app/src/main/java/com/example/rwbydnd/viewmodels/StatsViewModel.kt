@@ -78,7 +78,7 @@ class StatsViewModel(private val statsDao: StatsDao): ViewModel()
                     intelligence = event.intelligence
                 ) }
             }
-            is StatsEvent.SetStatsFromId -> {
+            StatsEvent.SetStatsFromId -> {
                 viewModelScope.launch {
                     val characterId = _state.first { it.characterId != 0 }.characterId
                     val stats = statsDao.getStatsFromId(characterId)

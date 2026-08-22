@@ -408,11 +408,21 @@ class CharacterViewModel(private val characterDao: CharacterDao): ViewModel()
             CharacterEvent.SetInitialSkillPoints -> {
                 viewModelScope.launch {
                     val semblanceStrength =
-                        _state.first {it.semblanceStrength != -1 && it.characterId != 0}.semblanceStrength
-                    _state.update {
-                        it.copy(
-                            skillPoints = 40 + semblanceStrength
-                        )
+                        _state.first { it.semblanceStrength != -1 && it.characterId != 0 }.semblanceStrength
+                    if (_state.first{it.characterId != 0}.skillPoints == -1) {
+                        _state.update {
+                            it.copy(
+                                skillPoints = 40 + semblanceStrength
+                            )
+                        }
+                    }
+                    else
+                    {
+                        _state.update {
+                            it.copy(
+                                skillPoints = 0
+                            )
+                        }
                     }
                 }
             }

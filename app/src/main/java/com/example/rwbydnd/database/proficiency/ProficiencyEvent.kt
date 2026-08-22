@@ -1,8 +1,9 @@
 package com.example.rwbydnd.database.proficiency
 
 sealed interface ProficiencyEvent {
-    object newProficiency: ProficiencyEvent
-    object resetState: ProficiencyEvent
+    object NewProficiency: ProficiencyEvent
+    object ResetState: ProficiencyEvent
+    object SetProficiencyFromId: ProficiencyEvent
     data class SetCharacterId(val characterId: Int): ProficiencyEvent
     data class SetStrength(val strength: Boolean): ProficiencyEvent
     data class SetAthletics(val athletics: Boolean): ProficiencyEvent
