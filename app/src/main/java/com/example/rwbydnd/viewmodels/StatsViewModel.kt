@@ -80,7 +80,7 @@ class StatsViewModel(private val statsDao: StatsDao): ViewModel()
             }
             is StatsEvent.SetStatsFromId -> {
                 viewModelScope.launch {
-                    val characterId = _state.first { it.characterId != -1 }.characterId
+                    val characterId = _state.first { it.characterId != 0 }.characterId
                     val stats = statsDao.getStatsFromId(characterId)
                     if (stats != null) {
                         _state.update {

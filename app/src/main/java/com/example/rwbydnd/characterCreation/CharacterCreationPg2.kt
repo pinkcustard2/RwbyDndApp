@@ -3,26 +3,41 @@ package com.example.rwbydnd.characterCreation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.rwbydnd.CharacterCreationPg1
 import com.example.rwbydnd.CharacterCreationPg3
+import com.example.rwbydnd.MainMenu
 import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
 
@@ -40,26 +55,37 @@ class CharacterCreatorPg2
                 onEvent(CharacterEvent.SetCharacterFromName(state.characterName))
             }
         }
-        Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    onEvent(CharacterEvent.NewCharacter)
-                    navController.navigate(CharacterCreationPg3)
-                }
-            ) {
-                Icon(imageVector = Icons.Outlined.ChevronRight,
-                    contentDescription = "Next",)
-            }
-        })
+        Scaffold(modifier = Modifier.fillMaxSize())
         {
             innerPadding ->
             val scrollState = rememberScrollState()
+            var showMenuAlert by remember { mutableStateOf(false) }
+            if(showMenuAlert)
+            {
+                AlertDialog(
+                    confirmButton = { TextButton(onClick = {
+                        onEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(MainMenu)
+                    }) {Text("Return Home")} },
+                    dismissButton = { TextButton(onClick = { showMenuAlert = false }) {Text("Cancel")} },
+                    onDismissRequest = { showMenuAlert = false },
+                    title = {Text("Return Home")},
+                    text = {Text("Are you sure you want to return home (entered data will be saved)")}
+                )
+            }
             Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
                 {
                     Text(text = "Step 2 - Weapon",
                         style = MaterialTheme.typography.titleLarge)
+
+                    IconButton(onClick = {
+                        showMenuAlert = true
+                    }, Modifier.align(Alignment.CenterEnd)) {
+                        Icon(imageVector = Icons.Outlined.Home,
+                            contentDescription = "Home",)
+                    }
                 }
                 OutlinedTextField(
                     modifier = Modifier.padding(25.dp, 0.dp, 25.dp, 0.dp).fillMaxWidth(),
@@ -121,6 +147,40 @@ class CharacterCreatorPg2
                     label = {Text(text = "Weapon Description")},
                     minLines = 5
                 )
+                Row(verticalAlignment = Alignment.CenterVertically)
+                {
+                    Button(onClick = {
+                        onEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(CharacterCreationPg1)
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ))
+                    {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                        Text(text = "Back")
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(onClick = {
+                        onEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(CharacterCreationPg3)
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ))
+                    {
+                        Text(text = "Next")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                            contentDescription = "Next",
+                        )
+                    }
+                }
             }
         }
     }

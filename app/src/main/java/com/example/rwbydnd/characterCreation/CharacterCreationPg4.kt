@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,15 +12,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,9 +34,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.rwbydnd.CharacterCreationPg3
 import com.example.rwbydnd.CharacterCreationPg5
+import com.example.rwbydnd.MainMenu
 import com.example.rwbydnd.Species
 import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
@@ -59,28 +68,7 @@ class CharacterCreatorPg4 {
             onCharacterEvent(CharacterEvent.SetInitialSkillPoints)
         }
         var showAlert by remember {mutableStateOf("")}
-        Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    if(characterState.skillPoints == 0)
-                    {
-                        onStatsEvent(StatsEvent.SetCharacterId(characterState.characterId))
-                        onCharacterEvent(CharacterEvent.NewCharacter)
-                        onStatsEvent(StatsEvent.NewStats)
-                        navController.navigate(CharacterCreationPg5)
-                    }
-                    else
-                    {
-                        showAlert = "you have not allocated all skill points"
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.ChevronRight,
-                    contentDescription = "Next",
-                )
-            }
-        })
+        Scaffold(modifier = Modifier.fillMaxSize())
         { innerPadding ->
             val scrollState = rememberScrollState()
             val stats = mutableListOf(
@@ -196,6 +184,20 @@ class CharacterCreatorPg4 {
                     onDismiss = {showAlert = ""}
                 )
             }
+            var showMenuAlert by remember { mutableStateOf(false) }
+            if(showMenuAlert)
+            {
+                AlertDialog(
+                    confirmButton = { TextButton(onClick = {
+                        onCharacterEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(MainMenu)
+                    }) {Text("Return Home")} },
+                    dismissButton = { TextButton(onClick = { showMenuAlert = false }) {Text("Cancel")} },
+                    onDismissRequest = { showMenuAlert = false },
+                    title = {Text("Return Home")},
+                    text = {Text("Are you sure you want to return home (entered data will be saved)")}
+                )
+            }
             Column(Modifier
                 .padding(innerPadding)
                 .verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
@@ -206,6 +208,13 @@ class CharacterCreatorPg4 {
                         text = "Step 4 - Stats",
                         style = MaterialTheme.typography.titleLarge
                     )
+
+                    IconButton(onClick = {
+                        showMenuAlert = true
+                    }, Modifier.align(Alignment.CenterEnd)) {
+                        Icon(imageVector = Icons.Outlined.Home,
+                            contentDescription = "Home",)
+                    }
                 }
                 Box(Modifier.padding(20.dp, top = 10.dp))
                 {
@@ -268,6 +277,49 @@ class CharacterCreatorPg4 {
                                 )
                             }
                         }
+                    }
+                }
+                Row(verticalAlignment = Alignment.CenterVertically)
+                {
+                    Button(onClick = {
+                        onCharacterEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(CharacterCreationPg3)
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ))
+                    {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                        Text(text = "Back")
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(onClick = {
+                        if(characterState.skillPoints == 0)
+                        {
+                            onStatsEvent(StatsEvent.SetCharacterId(characterState.characterId))
+                            onCharacterEvent(CharacterEvent.NewCharacter)
+                            onStatsEvent(StatsEvent.NewStats)
+                            navController.navigate(CharacterCreationPg5)
+                        }
+                        else
+                        {
+                            showAlert = "you have not allocated all skill points"
+                        }
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ))
+                    {
+                        Text(text = "Next")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                            contentDescription = "Next",
+                        )
                     }
                 }
             }

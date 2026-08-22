@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,11 +14,16 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -38,6 +44,7 @@ import androidx.compose.ui.semantics.Role.Companion.RadioButton
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.rwbydnd.CharacterCreationPg2
+import com.example.rwbydnd.MainMenu
 import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
 import com.example.rwbydnd.Species
@@ -60,26 +67,10 @@ class CharacterCreatorPg1
         var species by remember { mutableStateOf("Human") }
         var selectedVariant by remember {mutableStateOf("Select Variant")}
         var showError by remember {mutableStateOf("")}
-        Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    if(state.characters.any{it.characterName == state.characterName})
-                    {
-                        showError = "character with this name already exists"
-                    }
-                    else
-                    {
-                        onEvent(CharacterEvent.NewCharacter)
-                        navController.navigate(CharacterCreationPg2)
-                    }
-                }
-            ) {
-                Icon(imageVector = Icons.Outlined.ChevronRight,
-                    contentDescription = "Next",)
-            }
-        })
+        Scaffold(modifier = Modifier.fillMaxSize())
         { innerPadding ->
             val scrollState = rememberScrollState()
+
             if(showError.isNotEmpty())
             {
                 CharacterCreationAlert().CharacterCreatorError(
@@ -87,12 +78,33 @@ class CharacterCreatorPg1
                     onDismiss = {showError = ""}
                 )
             }
+            var showMenuAlert by remember { mutableStateOf(false) }
+            if(showMenuAlert)
+            {
+                AlertDialog(
+                    confirmButton = { TextButton(onClick = {
+                        onEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(MainMenu)
+                    }) {Text("Return Home")} },
+                    dismissButton = { TextButton(onClick = { showMenuAlert = false }) {Text("Cancel")} },
+                    onDismissRequest = { showMenuAlert = false },
+                    title = {Text("Return Home")},
+                    text = {Text("Are you sure you want to return home (entered data will be saved)")}
+                )
+            }
             Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth())
                 {
                     Text(text = "Step 1 - Name and Appearance",
                         style = MaterialTheme.typography.titleLarge)
+
+                    IconButton(onClick = {
+                        showMenuAlert = true
+                    }, Modifier.align(Alignment.CenterEnd)) {
+                        Icon(imageVector = Icons.Outlined.Home,
+                            contentDescription = "Home",)
+                    }
                 }
                 var labelText by remember {mutableStateOf("Character Name")}
                 var error by remember {mutableStateOf(false)}
@@ -297,6 +309,51 @@ class CharacterCreatorPg1
                     label = {Text(text = "Appearance")},
                     minLines = 5
                 )
+                Row(verticalAlignment = Alignment.CenterVertically)
+                {
+                    Button(onClick = {
+                        onEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(MainMenu)
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ))
+                    {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                        Text(text = "Back")
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(onClick = {
+                        if(state.characters.any{it.characterName == state.characterName} && state.characterId == 0)
+                        {
+                            showError = "character with this name already exists"
+                        }
+                        else if(state.characterName.isEmpty())
+                        {
+                            showError = "no character name entered"
+                        }
+                        else
+                        {
+                            onEvent(CharacterEvent.NewCharacter)
+                            navController.navigate(CharacterCreationPg2)
+                        }
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ))
+                    {
+                        Text(text = "Next")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                            contentDescription = "Next",
+                        )
+                    }
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,15 +12,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,8 +35,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.rwbydnd.CharacterCreationPg4
+import com.example.rwbydnd.MainMenu
 import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
 import com.example.rwbydnd.database.proficiency.ProficiencyEvent
@@ -61,33 +70,7 @@ class CharacterCreatorPg5 {
         var savingThrows by remember{ mutableIntStateOf(2) }
         var proficienciesLeft by remember{ mutableIntStateOf(4) }
         var showAlert by remember {mutableStateOf("")}
-        Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    if(savingThrows == 0 && proficienciesLeft == 0)
-                    {
-                        onCharacterEvent(CharacterEvent.SetCurrentHealth(20 + ((statsState.constitution - 10) / 2)))
-                        onCharacterEvent(CharacterEvent.SetCurrentAura(100 + (((statsState.constitution - 10) / 2) * 5)))
-                        onCharacterEvent(CharacterEvent.SetMaxAura(100 + (((statsState.constitution - 10) / 2) * 5)))
-                        onCharacterEvent(CharacterEvent.SetCredits(100))
-                        onCharacterEvent(CharacterEvent.SetProficiencyBonus(2))
-                        onCharacterEvent(CharacterEvent.NewCharacter)
-                        onProficiencyEvent(ProficiencyEvent.SetCharacterId(characterState.characterId))
-                        onProficiencyEvent(ProficiencyEvent.newProficiency)
-                        //navController.navigate(CharacterCreationPg2)
-                    }
-                    else
-                    {
-                        showAlert = "not all saving throws and proficiencies have been allocated"
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.ChevronRight,
-                    contentDescription = "Next",
-                )
-            }
-        })
+        Scaffold(modifier = Modifier.fillMaxSize())
         { innerPadding ->
             if (!loadedStats && characterState.characterId != 0)
             {
@@ -128,6 +111,20 @@ class CharacterCreatorPg5 {
                     onDismiss = {showAlert = ""}
                 )
             }
+            var showMenuAlert by remember { mutableStateOf(false) }
+            if(showMenuAlert)
+            {
+                AlertDialog(
+                    confirmButton = { TextButton(onClick = {
+                        onCharacterEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(MainMenu)
+                    }) {Text("Return Home")} },
+                    dismissButton = { TextButton(onClick = { showMenuAlert = false }) {Text("Cancel")} },
+                    onDismissRequest = { showMenuAlert = false },
+                    title = {Text("Return Home")},
+                    text = {Text("Are you sure you want to return home (entered data will be saved)")}
+                )
+            }
             Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
@@ -136,6 +133,12 @@ class CharacterCreatorPg5 {
                         text = "Step 5 - Proficiencies",
                         style = MaterialTheme.typography.titleLarge
                     )
+                    IconButton(onClick = {
+                        showMenuAlert = true
+                    }, Modifier.align(Alignment.CenterEnd)) {
+                        Icon(imageVector = Icons.Outlined.Home,
+                            contentDescription = "Home",)
+                    }
                 }
                 Box(Modifier.padding(20.dp, top = 10.dp))
                 {
@@ -291,6 +294,54 @@ class CharacterCreatorPg5 {
                                 }
                             }
                         }
+                    }
+                }
+                Row(verticalAlignment = Alignment.CenterVertically)
+                {
+                    Button(onClick = {
+                        onCharacterEvent(CharacterEvent.NewCharacter)
+                        navController.navigate(CharacterCreationPg4)
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ))
+                    {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                        Text(text = "Back")
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(onClick = {
+                        if(savingThrows == 0 && proficienciesLeft == 0)
+                        {
+                            onCharacterEvent(CharacterEvent.SetCurrentHealth(20 + ((statsState.constitution - 10) / 2)))
+                            onCharacterEvent(CharacterEvent.SetCurrentAura(100 + (((statsState.constitution - 10) / 2) * 5)))
+                            onCharacterEvent(CharacterEvent.SetMaxAura(100 + (((statsState.constitution - 10) / 2) * 5)))
+                            onCharacterEvent(CharacterEvent.SetCredits(100))
+                            onCharacterEvent(CharacterEvent.SetProficiencyBonus(2))
+                            onCharacterEvent(CharacterEvent.NewCharacter)
+                            onProficiencyEvent(ProficiencyEvent.SetCharacterId(characterState.characterId))
+                            onProficiencyEvent(ProficiencyEvent.newProficiency)
+                            //navController.navigate(CharacterCreationPg2)
+                        }
+                        else
+                        {
+                            showAlert = "not all saving throws and proficiencies have been allocated"
+                        }
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ))
+                    {
+                        Text(text = "Next")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                            contentDescription = "Next",
+                        )
                     }
                 }
                 Box(Modifier.padding(0.dp, 100.dp))
