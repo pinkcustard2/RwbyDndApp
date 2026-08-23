@@ -49,7 +49,7 @@ import com.example.rwbydnd.CharacterCreationPg2
 import com.example.rwbydnd.MainMenu
 import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
-import com.example.rwbydnd.Species
+import com.example.rwbydnd.database.Species
 
 class CharacterCreatorPg1
 {

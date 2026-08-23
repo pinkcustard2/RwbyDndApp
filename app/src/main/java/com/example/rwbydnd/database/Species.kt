@@ -1,4 +1,4 @@
-package com.example.rwbydnd
+package com.example.rwbydnd.database
 
 enum class Species
 {

@@ -42,7 +42,7 @@ import androidx.navigation.NavController
 import com.example.rwbydnd.CharacterCreationPg3
 import com.example.rwbydnd.CharacterCreationPg5
 import com.example.rwbydnd.MainMenu
-import com.example.rwbydnd.Species
+import com.example.rwbydnd.database.Species
 import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
 import com.example.rwbydnd.database.stats.StatsEvent

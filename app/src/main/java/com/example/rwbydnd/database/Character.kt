@@ -3,7 +3,6 @@ package com.example.rwbydnd.database
 import androidx.room3.Entity
 import androidx.room3.ForeignKey
 import androidx.room3.PrimaryKey
-import com.example.rwbydnd.Species
 
 @Entity(tableName = "Characters")
 data class Character
@@ -91,6 +90,11 @@ data class Proficiencies
 )
 
 data class Backstory
+(
+        var characterId: Int
+)
+
+data class Notes
 (
         var characterId: Int
 )
