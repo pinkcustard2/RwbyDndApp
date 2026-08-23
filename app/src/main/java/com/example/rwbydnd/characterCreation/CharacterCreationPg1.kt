@@ -20,8 +20,10 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -67,7 +69,26 @@ class CharacterCreatorPg1
         var species by remember { mutableStateOf("Human") }
         var selectedVariant by remember {mutableStateOf("Select Variant")}
         var showError by remember {mutableStateOf("")}
-        Scaffold(modifier = Modifier.fillMaxSize())
+        var showMenuAlert by remember { mutableStateOf(false) }
+        Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+            @OptIn(ExperimentalMaterial3Api::class)
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Step 1 - Name and Appearance",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        showMenuAlert = true
+                    }) {
+                        Icon(imageVector = Icons.Outlined.Home,
+                            contentDescription = "Home",)
+                    }
+                }
+            )
+        })
         { innerPadding ->
             val scrollState = rememberScrollState()
 
@@ -78,7 +99,6 @@ class CharacterCreatorPg1
                     onDismiss = {showError = ""}
                 )
             }
-            var showMenuAlert by remember { mutableStateOf(false) }
             if(showMenuAlert)
             {
                 AlertDialog(
@@ -94,18 +114,6 @@ class CharacterCreatorPg1
             }
             Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth())
-                {
-                    Text(text = "Step 1 - Name and Appearance",
-                        style = MaterialTheme.typography.titleLarge)
-
-                    IconButton(onClick = {
-                        showMenuAlert = true
-                    }, Modifier.align(Alignment.CenterEnd)) {
-                        Icon(imageVector = Icons.Outlined.Home,
-                            contentDescription = "Home",)
-                    }
-                }
                 var labelText by remember {mutableStateOf("Character Name")}
                 var error by remember {mutableStateOf(false)}
                 OutlinedTextField(

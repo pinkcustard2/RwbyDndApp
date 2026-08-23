@@ -189,6 +189,11 @@ class MainMenuScreen {
                                         onEvent(CharacterEvent.SetCharacterId(character.characterId))
                                         navController.navigate(CharacterCreationPg5)
                                     }
+                                    else
+                                    {
+                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                        navController.navigate(CharacterView)
+                                    }
                                 })
                                 {
                                     Icon(

@@ -17,8 +17,10 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -62,7 +64,26 @@ class CharacterCreatorPg3
             }
         }
         var showAlert by remember {mutableStateOf("")}
-        Scaffold(modifier = Modifier.fillMaxSize())
+        var showMenuAlert by remember { mutableStateOf(false) }
+        Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+            @OptIn(ExperimentalMaterial3Api::class)
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Step 3 - Semblance",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        showMenuAlert = true
+                    }) {
+                        Icon(imageVector = Icons.Outlined.Home,
+                            contentDescription = "Home",)
+                    }
+                }
+            )
+        })
         { innerPadding ->
             val scrollState = rememberScrollState()
             if(showAlert.isNotEmpty())
@@ -72,7 +93,6 @@ class CharacterCreatorPg3
                     onDismiss = {showAlert = ""}
                 )
             }
-            var showMenuAlert by remember { mutableStateOf(false) }
             if(showMenuAlert)
             {
                 AlertDialog(
@@ -88,18 +108,6 @@ class CharacterCreatorPg3
             }
             Column(Modifier.padding(innerPadding).verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
-                {
-                    Text(text = "Step 3 - Semblance",
-                        style = MaterialTheme.typography.titleLarge)
-
-                    IconButton(onClick = {
-                        showMenuAlert = true
-                    }, Modifier.align(Alignment.CenterEnd)) {
-                        Icon(imageVector = Icons.Outlined.Home,
-                            contentDescription = "Home",)
-                    }
-                }
                 OutlinedTextField(
                     modifier = Modifier.padding(25.dp, 0.dp, 25.dp, 0.dp).fillMaxWidth(),
                     value = state.semblanceName,

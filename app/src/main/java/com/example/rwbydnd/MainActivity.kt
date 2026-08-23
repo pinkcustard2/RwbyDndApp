@@ -18,6 +18,7 @@ import com.example.rwbydnd.characterCreation.CharacterCreatorPg2
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg3
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg4
 import com.example.rwbydnd.characterCreation.CharacterCreatorPg5
+import com.example.rwbydnd.characterScreen.CharacterScreen
 import com.example.rwbydnd.database.CharacterDatabase
 import com.example.rwbydnd.ui.theme.RwbydndTheme
 import com.example.rwbydnd.viewmodels.CharacterViewModel
@@ -136,6 +137,18 @@ class MainActivity : ComponentActivity() {
                             statsViewModel::onEvent
                         )
                     }
+                    composable<CharacterView>
+                    {
+                        CharacterScreen().characterScreen(
+                            navController,
+                            characterState,
+                            proficiencyState,
+                            statsState,
+                            characterViewModel::onEvent,
+                            proficiencyViewModel::onEvent,
+                            statsViewModel::onEvent
+                        )
+                    }
                 }
             }
         }
@@ -160,6 +173,9 @@ object CharacterCreationPg4
 
 @Serializable
 object CharacterCreationPg5
+
+@Serializable
+object CharacterView
 
 data class Tab(
     val title: String

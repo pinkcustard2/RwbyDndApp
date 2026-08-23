@@ -20,6 +20,8 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -70,7 +72,26 @@ class CharacterCreatorPg4 {
             onStatsEvent(StatsEvent.SetStatsFromId)
         }
         var showAlert by remember {mutableStateOf("")}
-        Scaffold(modifier = Modifier.fillMaxSize())
+        var showMenuAlert by remember { mutableStateOf(false) }
+        Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+            @OptIn(ExperimentalMaterial3Api::class)
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Step 4 - Stats",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        showMenuAlert = true
+                    }) {
+                        Icon(imageVector = Icons.Outlined.Home,
+                            contentDescription = "Home",)
+                    }
+                }
+            )
+        })
         { innerPadding ->
             val scrollState = rememberScrollState()
             val stats = mutableListOf(
@@ -186,7 +207,6 @@ class CharacterCreatorPg4 {
                     onDismiss = {showAlert = ""}
                 )
             }
-            var showMenuAlert by remember { mutableStateOf(false) }
             if(showMenuAlert)
             {
                 AlertDialog(
@@ -204,20 +224,6 @@ class CharacterCreatorPg4 {
                 .padding(innerPadding)
                 .verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
-                {
-                    Text(
-                        text = "Step 4 - Stats",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-
-                    IconButton(onClick = {
-                        showMenuAlert = true
-                    }, Modifier.align(Alignment.CenterEnd)) {
-                        Icon(imageVector = Icons.Outlined.Home,
-                            contentDescription = "Home",)
-                    }
-                }
                 Box(Modifier.padding(20.dp, top = 10.dp))
                 {
                     Text(text = "Skill Points: ${characterState.skillPoints}")

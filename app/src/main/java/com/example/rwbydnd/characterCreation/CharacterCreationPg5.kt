@@ -20,6 +20,8 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.rwbydnd.CharacterCreationPg4
+import com.example.rwbydnd.CharacterView
 import com.example.rwbydnd.MainMenu
 import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
@@ -73,7 +76,26 @@ class CharacterCreatorPg5 {
         var savingThrows by remember{ mutableIntStateOf(2) }
         var proficienciesLeft by remember{ mutableIntStateOf(4) }
         var showAlert by remember {mutableStateOf("")}
-        Scaffold(modifier = Modifier.fillMaxSize())
+        var showMenuAlert by remember { mutableStateOf(false) }
+        @OptIn(ExperimentalMaterial3Api::class)
+        Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Step 5 - Proficiencies",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        showMenuAlert = true
+                    }) {
+                        Icon(imageVector = Icons.Outlined.Home,
+                            contentDescription = "Home",)
+                    }
+                }
+            )
+        })
         { innerPadding ->
             val scrollState = rememberScrollState()
             val proficiencies = mutableListOf(
@@ -128,7 +150,6 @@ class CharacterCreatorPg5 {
                     onDismiss = {showAlert = ""}
                 )
             }
-            var showMenuAlert by remember { mutableStateOf(false) }
             if(showMenuAlert)
             {
                 AlertDialog(
@@ -146,19 +167,6 @@ class CharacterCreatorPg5 {
                 .padding(innerPadding)
                 .verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp))
             {
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
-                {
-                    Text(
-                        text = "Step 5 - Proficiencies",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    IconButton(onClick = {
-                        showMenuAlert = true
-                    }, Modifier.align(Alignment.CenterEnd)) {
-                        Icon(imageVector = Icons.Outlined.Home,
-                            contentDescription = "Home",)
-                    }
-                }
                 Box(Modifier.padding(20.dp, top = 10.dp))
                 {
                     Text(text = "Saving Throws Left: $savingThrows")
@@ -344,7 +352,7 @@ class CharacterCreatorPg5 {
                             onCharacterEvent(CharacterEvent.NewCharacter)
                             onProficiencyEvent(ProficiencyEvent.SetCharacterId(characterState.characterId))
                             onProficiencyEvent(ProficiencyEvent.NewProficiency)
-                            //navController.navigate(CharacterCreationPg2)
+                            navController.navigate(CharacterView)
                         }
                         else
                         {
