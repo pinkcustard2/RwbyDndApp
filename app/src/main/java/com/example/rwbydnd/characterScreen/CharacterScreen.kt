@@ -7,10 +7,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Notes
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -70,8 +73,13 @@ class CharacterScreen
             "Notes"
         )
         val pagerState = rememberPagerState() { tabItems.size }
-        LaunchedEffect(selectedTab) { pagerState.animateScrollToPage(selectedTab) }
-        LaunchedEffect(pagerState.currentPage) { selectedTab = pagerState.currentPage }
+        var isEditing by remember {mutableStateOf(false)}
+        LaunchedEffect(selectedTab) { pagerState.animateScrollToPage(selectedTab)
+            isEditing = false
+        }
+        LaunchedEffect(pagerState.currentPage) { selectedTab = pagerState.currentPage
+            isEditing = false
+        }
         Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
             @OptIn(ExperimentalMaterial3Api::class)
             TopAppBar(
@@ -128,43 +136,66 @@ class CharacterScreen
                         )
                     }
                 }
+            }, floatingActionButton = {
+                if(selectedTab == 0)
+                {
+                    FloatingActionButton(
+                        onClick = {
+                            isEditing = !isEditing
+                        },
+                    ) {
+                        if(!isEditing) {
+                            Icon(Icons.Outlined.Edit, "Floating action button.")
+                        } else {
+                            Icon(Icons.Outlined.Close, "Floating action button.")
+                        }
+                    }
+                }
             })
         { innerPadding ->
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.padding(innerPadding).fillMaxSize()
             )
-            {}
-            if(showMenuAlert)
             {
-                AlertDialog(
-                    confirmButton = { TextButton(onClick = {
-                        onCharacterEvent(CharacterEvent.NewCharacter)
-                        navController.navigate(MainMenu)
-                    }) {Text("Return Home")} },
-                    dismissButton = { TextButton(onClick = { showMenuAlert = false }) {Text("Cancel")} },
-                    onDismissRequest = { showMenuAlert = false },
-                    title = {Text("Return Home")},
-                    text = {Text("Are you sure you want to return home (entered data will be saved)")}
-                )
-            }
-
-            when(selectedTab)
-            {
-                1 -> {
-
+                if (showMenuAlert) {
+                    AlertDialog(
+                        confirmButton = {
+                            TextButton(onClick = {
+                                onCharacterEvent(CharacterEvent.NewCharacter)
+                                navController.navigate(MainMenu)
+                            }) { Text("Return Home") }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+                                showMenuAlert = false
+                            }) { Text("Cancel") }
+                        },
+                        onDismissRequest = { showMenuAlert = false },
+                        title = { Text("Return Home") },
+                        text = { Text("Are you sure you want to return home (data will be saved)") }
+                    )
                 }
-                2 -> {
+                when (selectedTab) {
+                    0 -> {
+                        CharacterTab().CharacterTab(statsState, isEditing)
+                    }
 
-                }
-                3 -> {
+                    1 -> {
 
-                }
-                4 -> {
+                    }
 
-                }
-                5 -> {
-                    
+                    2 -> {
+
+                    }
+
+                    3 -> {
+
+                    }
+
+                    4 -> {
+
+                    }
                 }
             }
         }
