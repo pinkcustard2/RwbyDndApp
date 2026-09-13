@@ -2,12 +2,13 @@ package com.example.rwbydnd
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -91,256 +92,256 @@ class MainMenuScreen {
 
         )
         { innerPadding ->
-            SecondaryTabRow(selectedTab, modifier = Modifier.padding(innerPadding)) {
-                tabItems.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = index == selectedTab,
-                        onClick = { selectedTab = index },
-                        text = { Text(text = tab.title) },
-                    )
-                }
-            }
-
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .offset(0.dp, 75.dp)
-            )
-            {
-                //index -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){Text(text = tabItems[index].title)}
-            }
-
-            if (selectedTab == 0) {
-                LazyColumn(modifier = Modifier.padding(0.dp, 85.dp, 0.dp, 25.dp)) {
-                    items(state.characters, key = { it.characterId }) { character ->
-                        var isToggled = character.favourite
-
-                        if(showDeleteDialog == character.characterId)
-                        {
-                            AlertDialog(
-                                confirmButton = { TextButton(onClick = {onEvent(CharacterEvent.DeleteCharacter(character))}) {Text("Delete")} },
-                                dismissButton = { TextButton(onClick = { showDeleteDialog = -1 }) {Text("Cancel")} },
-                                onDismissRequest = { showDeleteDialog = -1 },
-                                title = {Text("Delete Character")},
-                                text = {Text("Are you sure you want to delete ${character.characterName}")}
-                            )
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .animateItem()
-                                .padding(10.dp, 0.dp),
-                            verticalAlignment = Alignment.CenterVertically
+            Column(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+                SecondaryTabRow(selectedTab) {
+                    tabItems.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = index == selectedTab,
+                            onClick = { selectedTab = index },
+                            text = { Text(text = tab.title) },
                         )
-                        {
-                                IconButton(
-                                    onClick = {
-                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
-                                        onEvent(CharacterEvent.SetFavourite(!character.favourite))
-                                    },
-                                ) {
-                                    Icon(
-                                        imageVector = if (isToggled) {
-                                            Icons.Filled.Star
-                                        } else {
-                                            Icons.Outlined.StarRate
-                                        },
-                                        contentDescription = if (isToggled) "Selected icon button" else "Unselected icon button.",
-                                    )
-                                }
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .weight(1f)
-                                    .padding(10.dp, 0.dp),
-                            ) { Text(character.characterName, fontSize = 18.sp) }
-                            if(!isEditing)
-                            {
-                                IconButton(onClick = {
-                                    if(character.species == null)
-                                    {
-                                        // has not finished pg1 of character creation
-                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
-                                        navController.navigate(CharacterCreationPg1)
-                                    }
-                                    else if(character.weaponName == "" || character.weaponType1 == "" || character.weaponType2 == "")
-                                    {
-                                        // has not finished pg2 of character creation
-                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
-                                        navController.navigate(CharacterCreationPg2)
-                                    }
-                                    else if(character.semblanceName == "" || character.semblanceStrength == -1)
-                                    {
-                                        // has not finished pg3 of character creation
-                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
-                                        navController.navigate(CharacterCreationPg3)
-                                    }
-                                    else if(character.skillPoints == -1)
-                                    {
-                                        // has not finished pg4 of character creation
-                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
-                                        navController.navigate(CharacterCreationPg4)
-                                    }
-                                    else if(character.proficiencyBonus == -1)
-                                    {
-                                        // has not finished pg5 of character creation
-                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
-                                        navController.navigate(CharacterCreationPg5)
-                                    }
-                                    else
-                                    {
-                                        onEvent(CharacterEvent.SetCharacterId(character.characterId))
-                                        navController.navigate(CharacterView)
-                                    }
-                                })
-                                {
-                                    Icon(
-                                        imageVector = Icons.Filled.ChevronRight,
-                                        contentDescription = "View character",
-                                    )
-                                }
-                            }
-                            else
-                            {
-                                IconButton(onClick = {
-                                    showDeleteDialog = character.characterId
-                                })
-                                {
-                                    Icon(
-                                    imageVector = Icons.Outlined.Delete,
-                                    contentDescription = "View character",
-                                    )
-                                }
-                            }
-                        }
                     }
-                    if(isEditing)
-                    {
-                        item{
-                            TextButton(onClick = {
-                                onEvent(CharacterEvent.ResetState)
-                                navController.navigate(CharacterCreationPg1) },)
-                            {
+                }
+
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (selectedTab == 0) {
+                        LazyColumn(modifier = Modifier.fillMaxSize().padding(top = 10.dp, bottom = 25.dp), verticalArrangement = Arrangement.Top) {
+                            items(state.characters, key = { it.characterId }) { character ->
+                                var isToggled = character.favourite
+
+                                if(showDeleteDialog == character.characterId)
+                                {
+                                    AlertDialog(
+                                        confirmButton = { TextButton(onClick = {onEvent(CharacterEvent.DeleteCharacter(character))}) {Text("Delete")} },
+                                        dismissButton = { TextButton(onClick = { showDeleteDialog = -1 }) {Text("Cancel")} },
+                                        onDismissRequest = { showDeleteDialog = -1 },
+                                        title = {Text("Delete Character")},
+                                        text = {Text("Are you sure you want to delete ${character.characterName}")}
+                                    )
+                                }
+
                                 Row(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .animateItem(),
-                                    verticalAlignment = Alignment.CenterVertically,
+                                        .animateItem()
+                                        .padding(10.dp, 0.dp),
+                                    verticalAlignment = Alignment.CenterVertically
                                 )
                                 {
+                                    IconButton(
+                                        onClick = {
+                                            onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                            onEvent(CharacterEvent.SetFavourite(!character.favourite))
+                                        },
+                                    ) {
+                                        Icon(
+                                            imageVector = if (isToggled) {
+                                                Icons.Filled.Star
+                                            } else {
+                                                Icons.Outlined.StarRate
+                                            },
+                                            contentDescription = if (isToggled) "Selected icon button" else "Unselected icon button.",
+                                        )
+                                    }
                                     Box(
                                         modifier = Modifier
                                             .fillMaxHeight()
-                                            .padding(15.dp, 10.dp)
                                             .weight(1f)
-                                    ) { Text("New Character", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface) }
-                                    Icon(
-                                        imageVector = Icons.Outlined.Add,
-                                        contentDescription = "View character",
-                                        Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp),
-                                        tint =  MaterialTheme.colorScheme.onSurface
-                                    )
+                                            .padding(10.dp, 0.dp),
+                                    ) { Text(character.characterName, fontSize = 18.sp) }
+                                    if(!isEditing)
+                                    {
+                                        IconButton(onClick = {
+                                            if(character.species == null)
+                                            {
+                                                // has not finished pg1 of character creation
+                                                onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                                navController.navigate(CharacterCreationPg1)
+                                            }
+                                            else if(character.weaponName == "" || character.weaponType1 == "" || character.weaponType2 == "")
+                                            {
+                                                // has not finished pg2 of character creation
+                                                onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                                navController.navigate(CharacterCreationPg2)
+                                            }
+                                            else if(character.semblanceName == "" || character.semblanceStrength == -1)
+                                            {
+                                                // has not finished pg3 of character creation
+                                                onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                                navController.navigate(CharacterCreationPg3)
+                                            }
+                                            else if(character.skillPoints == -1)
+                                            {
+                                                // has not finished pg4 of character creation
+                                                onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                                navController.navigate(CharacterCreationPg4)
+                                            }
+                                            else if(character.proficiencyBonus == -1)
+                                            {
+                                                // has not finished pg5 of character creation
+                                                onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                                navController.navigate(CharacterCreationPg5)
+                                            }
+                                            else
+                                            {
+                                                onEvent(CharacterEvent.SetCharacterId(character.characterId))
+                                                navController.navigate(CharacterView)
+                                            }
+                                        })
+                                        {
+                                            Icon(
+                                                imageVector = Icons.Filled.ChevronRight,
+                                                contentDescription = "View character",
+                                            )
+                                        }
+                                    }
+                                    else
+                                    {
+                                        IconButton(onClick = {
+                                            showDeleteDialog = character.characterId
+                                        })
+                                        {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Delete,
+                                                contentDescription = "View character",
+                                            )
+                                        }
+                                    }
                                 }
                             }
+                            if(isEditing)
+                            {
+                                item{
+                                    TextButton(onClick = {
+                                        onEvent(CharacterEvent.ResetState)
+                                        navController.navigate(CharacterCreationPg1) },)
+                                    {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .animateItem(),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                        )
+                                        {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxHeight()
+                                                    .padding(15.dp, 10.dp)
+                                                    .weight(1f)
+                                            ) { Text("New Character", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface) }
+                                            Icon(
+                                                imageVector = Icons.Outlined.Add,
+                                                contentDescription = "View character",
+                                                Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp),
+                                                tint =  MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
+                                    }
 
+                                }
+                            }
                         }
-                    }
-                }
-            } else
-            {
-                val rules = remember{ mutableStateListOf(
-                    false, false
-                )}
-                Box(modifier = Modifier
-                    .padding(10.dp, 85.dp, 10.dp, 25.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainer)
-                    .fillMaxWidth()
-                )
-                {
-                    LazyColumn(Modifier.padding(10.dp))
+                    } else
                     {
-                        item{
-                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
-                                rules[0] = !rules[0]
-                            })
-                            {
-                                Box(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f)
-                                    .padding(5.dp, 5.dp))
-                                {
-                                    Text(rules[0].toString(), fontSize = 18.sp)
-                                }
-                                if(rules[0])
-                                {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowDropDown,
-                                        contentDescription = "Expanded",
-                                    )
-                                }
-                                else
-                                {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                                        contentDescription = "Expanded",
-                                    )
-                                }
-                            }
-                        }
-                        if(rules[0])
+                        val rules = remember{ mutableStateListOf(
+                            false, false
+                        )}
+                        Box(Modifier.fillMaxSize())
                         {
-                            item{
-                                Box(modifier = Modifier
-                                    .padding(5.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(MaterialTheme.colorScheme.primaryContainer)
-                                    .fillMaxWidth())
-                                {
-                                    Text("asdfsdafsdafssadfs", Modifier.padding(10.dp, 5.dp))
-                                }
-                            }
-                        }
-                        item{
-                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
-                                rules[1] = !rules[1]
-                            })
+                            Box(modifier = Modifier
+                                .padding(10.dp, 25.dp, 10.dp, 25.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(MaterialTheme.colorScheme.surfaceContainer)
+                                .fillMaxWidth()
+                            )
                             {
-                                Box(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f)
-                                    .padding(5.dp, 5.dp))
+                                LazyColumn(Modifier.padding(10.dp))
                                 {
-                                    Text(rules[1].toString(), fontSize = 18.sp)
-                                }
-                                if(rules[1])
-                                {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowDropDown,
-                                        contentDescription = "Expanded",
-                                    )
-                                }
-                                else
-                                {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                                        contentDescription = "Expanded",
-                                    )
-                                }
-                            }
-                        }
-                        if(rules[1])
-                        {
-                            item{
-                                Box(modifier = Modifier
-                                    .padding(5.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(MaterialTheme.colorScheme.primaryContainer)
-                                    .fillMaxWidth())
-                                {
-                                    Text("asdfsdafsdafssadfs", Modifier.padding(10.dp, 5.dp))
+                                    item{
+                                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
+                                            rules[0] = !rules[0]
+                                        })
+                                        {
+                                            Box(modifier = Modifier
+                                                .fillMaxWidth()
+                                                .weight(1f)
+                                                .padding(5.dp, 5.dp))
+                                            {
+                                                Text(rules[0].toString(), fontSize = 18.sp)
+                                            }
+                                            if(rules[0])
+                                            {
+                                                Icon(
+                                                    imageVector = Icons.Filled.ArrowDropDown,
+                                                    contentDescription = "Expanded",
+                                                )
+                                            }
+                                            else
+                                            {
+                                                Icon(
+                                                    imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                                    contentDescription = "Expanded",
+                                                )
+                                            }
+                                        }
+                                    }
+                                    if(rules[0])
+                                    {
+                                        item{
+                                            Box(modifier = Modifier
+                                                .padding(5.dp)
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .background(MaterialTheme.colorScheme.primaryContainer)
+                                                .fillMaxWidth())
+                                            {
+                                                Text("asdfsdafsdafssadfs", Modifier.padding(10.dp, 5.dp))
+                                            }
+                                        }
+                                    }
+                                    item{
+                                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
+                                            rules[1] = !rules[1]
+                                        })
+                                        {
+                                            Box(modifier = Modifier
+                                                .fillMaxWidth()
+                                                .weight(1f)
+                                                .padding(5.dp, 5.dp))
+                                            {
+                                                Text(rules[1].toString(), fontSize = 18.sp)
+                                            }
+                                            if(rules[1])
+                                            {
+                                                Icon(
+                                                    imageVector = Icons.Filled.ArrowDropDown,
+                                                    contentDescription = "Expanded",
+                                                )
+                                            }
+                                            else
+                                            {
+                                                Icon(
+                                                    imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                                    contentDescription = "Expanded",
+                                                )
+                                            }
+                                        }
+                                    }
+                                    if(rules[1])
+                                    {
+                                        item{
+                                            Box(modifier = Modifier
+                                                .padding(5.dp)
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .background(MaterialTheme.colorScheme.primaryContainer)
+                                                .fillMaxWidth())
+                                            {
+                                                Text("asdfsdafsdafssadfs", Modifier.padding(10.dp, 5.dp))
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
