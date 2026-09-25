@@ -178,7 +178,7 @@ class CharacterScreen
                 }
                 when (selectedTab) {
                     0 -> {
-                        CharacterTab().CharacterTab(statsState, isEditing)
+                        CharacterTab().CharacterTab(statsState, characterState, proficiencyState, isEditing)
                     }
 
                     1 -> {
