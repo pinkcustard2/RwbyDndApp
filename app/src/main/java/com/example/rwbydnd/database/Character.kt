@@ -89,6 +89,11 @@ data class Proficiencies
         var persuasion: Boolean
 )
 
+data class Inventory
+(
+        var characterId: Int
+)
+
 data class Backstory
 (
         var characterId: Int

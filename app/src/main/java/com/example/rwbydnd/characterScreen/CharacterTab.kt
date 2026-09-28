@@ -36,16 +36,29 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.rwbydnd.database.Stat
+import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
+import com.example.rwbydnd.database.proficiency.ProficiencyEvent
 import com.example.rwbydnd.database.proficiency.ProficiencyState
+import com.example.rwbydnd.database.stats.StatsEvent
 import com.example.rwbydnd.database.stats.StatsState
+import com.example.rwbydnd.viewmodels.CharacterTabViewModel
 
 class CharacterTab
 {
     @SuppressLint("NotConstructor", "UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
-    fun CharacterTab(statsState: StatsState, characterState: CharacterState, proficiencyState: ProficiencyState, isEditing: Boolean)
+    fun CharacterTab(statsState: StatsState,
+                     characterState: CharacterState,
+                     proficiencyState: ProficiencyState,
+                     isEditing: Boolean,
+                     onCharacterEvent: (CharacterEvent) -> Unit,
+                     onProficiencyEvent: (ProficiencyEvent) -> Unit,
+                     onStatsEvent: (StatsEvent) -> Unit)
     {
+        val characterTabViewModel: CharacterTabViewModel = viewModel()
         Scaffold(modifier = Modifier.fillMaxSize())
         {
             val stats = mutableListOf(
@@ -346,14 +359,57 @@ class CharacterTab
 
                                         if(isEditing)
                                         {
-                                            IconButton(onClick = {}, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
+                                            IconButton(onClick = {
+                                                when(name)
+                                                {
+                                                    "Strength" -> {
+                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.STRENGTH))
+                                                        {
+                                                            //alert
+                                                        }
+                                                    }
+                                                    "Dexterity" -> {
+                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.DEXTERITY))
+                                                        {
+
+                                                        }
+                                                    }
+                                                    "Intelligence" -> {
+                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.INTELLIGENCE))
+                                                        {
+
+                                                        }
+                                                    }
+                                                }
+                                            }, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
                                                 Icon(
                                                     imageVector = Icons.Filled.Remove,
                                                     contentDescription = "-1 stat"
                                                 )
                                             }
 
-                                            IconButton(onClick = {}, Modifier.align(Alignment.CenterEnd).offset(x = 8.dp)) {
+                                            IconButton(onClick = {
+                                                when(name)
+                                                {
+                                                    "Strength" -> {
+                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.STRENGTH))
+                                                        {
+
+                                                        }
+                                                    }
+                                                    "Dexterity" -> {
+                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.DEXTERITY))
+                                                        {
+
+                                                        }
+                                                    }
+                                                    "Intelligence" -> {
+                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.INTELLIGENCE))
+                                                        {
+                                                        }
+                                                    }
+                                                }
+                                            }, Modifier.align(Alignment.CenterEnd).offset(x = 8.dp)) {
                                                 Icon(
                                                     imageVector = Icons.Filled.Add,
                                                     contentDescription = "+1 stat"
@@ -423,14 +479,57 @@ class CharacterTab
 
                                         if(isEditing)
                                         {
-                                            IconButton(onClick = {}, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
+                                            IconButton(onClick = {
+                                                when(name)
+                                                {
+                                                    "Wisdom" -> {
+                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.WISDOM))
+                                                        {
+
+                                                        }
+                                                    }
+                                                    "Constitution" -> {
+                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CONSTITUTION))
+                                                        {
+                                                        }
+                                                    }
+                                                    "Charisma" -> {
+                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CHARISMA))
+                                                        {
+
+                                                        }
+                                                    }
+                                                }
+                                            }, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
                                                 Icon(
                                                     imageVector = Icons.Filled.Remove,
                                                     contentDescription = "-1 stat"
                                                 )
                                             }
 
-                                            IconButton(onClick = {}, Modifier.align(Alignment.CenterEnd).offset(x = 8.dp)) {
+                                            IconButton(onClick = {
+                                                when(name)
+                                                {
+                                                    "Wisdom" -> {
+                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.WISDOM))
+                                                        {
+
+                                                        }
+                                                    }
+                                                    "Constitution" -> {
+                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CONSTITUTION))
+                                                        {
+
+                                                        }
+                                                    }
+                                                    "Charisma" -> {
+                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CHARISMA))
+                                                        {
+
+                                                        }
+                                                    }
+                                                }
+                                            }, Modifier.align(Alignment.CenterEnd).offset(x = 8.dp)) {
                                                 Icon(
                                                     imageVector = Icons.Filled.Add,
                                                     contentDescription = "+1 stat"
