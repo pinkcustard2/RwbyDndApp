@@ -30,6 +30,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,6 +64,8 @@ class CharacterTab
                      onStatsEvent: (StatsEvent) -> Unit)
     {
         val characterTabViewModel: CharacterTabViewModel = viewModel()
+        var showSkillPointAlert by remember { mutableIntStateOf(-1) }
+
         Scaffold(modifier = Modifier.fillMaxSize())
         {
             val stats = mutableListOf(
@@ -123,6 +130,11 @@ class CharacterTab
                 "Performance" to statsState.charisma,
                 "Persuasion" to statsState.charisma
             )
+
+            if(showSkillPointAlert != -1)
+            {
+                CharacterScreenAlerts().NotEnoughSkillPoints(showSkillPointAlert, characterState.skillPoints, {showSkillPointAlert = -1})
+            }
 
             val scrollState = rememberScrollState()
             Column(Modifier.padding().verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -359,54 +371,39 @@ class CharacterTab
 
                                         if(isEditing)
                                         {
-                                            IconButton(onClick = {
-                                                when(name)
-                                                {
-                                                    "Strength" -> {
-                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.STRENGTH))
-                                                        {
-                                                            //alert
+                                            if(value > 0)
+                                            {
+                                                IconButton(onClick = {
+                                                    when(name)
+                                                    {
+                                                        "Strength" -> {
+                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.STRENGTH)
+                                                        }
+                                                        "Dexterity" -> {
+                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.DEXTERITY)
+                                                        }
+                                                        "Intelligence" -> {
+                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.INTELLIGENCE)
                                                         }
                                                     }
-                                                    "Dexterity" -> {
-                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.DEXTERITY))
-                                                        {
-
-                                                        }
-                                                    }
-                                                    "Intelligence" -> {
-                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.INTELLIGENCE))
-                                                        {
-
-                                                        }
-                                                    }
+                                                }, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.Remove,
+                                                        contentDescription = "-1 stat"
+                                                    )
                                                 }
-                                            }, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
-                                                Icon(
-                                                    imageVector = Icons.Filled.Remove,
-                                                    contentDescription = "-1 stat"
-                                                )
                                             }
 
                                             IconButton(onClick = {
                                                 when(name)
                                                 {
                                                     "Strength" -> {
-                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.STRENGTH))
-                                                        {
-
-                                                        }
+                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.STRENGTH)
                                                     }
                                                     "Dexterity" -> {
-                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.DEXTERITY))
-                                                        {
-
-                                                        }
-                                                    }
+                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.DEXTERITY)                                                    }
                                                     "Intelligence" -> {
-                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.INTELLIGENCE))
-                                                        {
-                                                        }
+                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.INTELLIGENCE)
                                                     }
                                                 }
                                             }, Modifier.align(Alignment.CenterEnd).offset(x = 8.dp)) {
@@ -479,54 +476,40 @@ class CharacterTab
 
                                         if(isEditing)
                                         {
-                                            IconButton(onClick = {
-                                                when(name)
-                                                {
-                                                    "Wisdom" -> {
-                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.WISDOM))
-                                                        {
-
+                                            if(value > 0)
+                                            {
+                                                IconButton(onClick = {
+                                                    when(name)
+                                                    {
+                                                        "Wisdom" -> {
+                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.WISDOM)
+                                                        }
+                                                        "Constitution" -> {
+                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CONSTITUTION)
+                                                        }
+                                                        "Charisma" -> {
+                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CHARISMA)
                                                         }
                                                     }
-                                                    "Constitution" -> {
-                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CONSTITUTION))
-                                                        {
-                                                        }
-                                                    }
-                                                    "Charisma" -> {
-                                                        if(characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CHARISMA))
-                                                        {
-
-                                                        }
-                                                    }
+                                                }, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.Remove,
+                                                        contentDescription = "-1 stat"
+                                                    )
                                                 }
-                                            }, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
-                                                Icon(
-                                                    imageVector = Icons.Filled.Remove,
-                                                    contentDescription = "-1 stat"
-                                                )
                                             }
 
                                             IconButton(onClick = {
                                                 when(name)
                                                 {
                                                     "Wisdom" -> {
-                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.WISDOM))
-                                                        {
-
-                                                        }
+                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.WISDOM)
                                                     }
                                                     "Constitution" -> {
-                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CONSTITUTION))
-                                                        {
-
-                                                        }
+                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CONSTITUTION)
                                                     }
                                                     "Charisma" -> {
-                                                        if(characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CHARISMA))
-                                                        {
-
-                                                        }
+                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CHARISMA)
                                                     }
                                                 }
                                             }, Modifier.align(Alignment.CenterEnd).offset(x = 8.dp)) {

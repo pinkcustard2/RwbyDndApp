@@ -13,7 +13,7 @@ class CharacterTabViewModel(): ViewModel()
                       onCharacterEvent: (CharacterEvent) -> Unit,
                       statsState: StatsState,
                       onStatsEvent: (StatsEvent) -> Unit,
-                      stat: Stat): Boolean
+                      stat: Stat): Int
     {
         val statValue: Int
         val skillPoints = characterState.skillPoints
@@ -65,17 +65,16 @@ class CharacterTabViewModel(): ViewModel()
                 }
             }
 
-            return true
+            return -1
         }
-        
-        return false
+        return required
     }
 
     fun decrementStat(characterState: CharacterState,
                       onCharacterEvent: (CharacterEvent) -> Unit,
                       statsState: StatsState,
                       onStatsEvent: (StatsEvent) -> Unit,
-                      stat: Stat): Boolean
+                      stat: Stat)
     {
         val statValue: Int
         val skillPoints = characterState.skillPoints
@@ -102,35 +101,28 @@ class CharacterTabViewModel(): ViewModel()
             }
         }
 
-        if(statValue > 0)
+        onCharacterEvent(CharacterEvent.SetSkillPoints(skillPoints + toGet))
+        when(stat)
         {
-            onCharacterEvent(CharacterEvent.SetSkillPoints(skillPoints + toGet))
-            when(stat)
-            {
-                Stat.STRENGTH -> {
-
-                    onStatsEvent(StatsEvent.SetStrength(statValue - 1))
-                }
-                Stat.DEXTERITY -> {
-                    onStatsEvent(StatsEvent.SetDexterity(statValue - 1))
-                }
-                Stat.INTELLIGENCE -> {
-                    onStatsEvent(StatsEvent.SetIntelligence(statValue - 1))
-                }
-                Stat.WISDOM -> {
-                    onStatsEvent(StatsEvent.SetWisdom(statValue - 1))
-                }
-                Stat.CONSTITUTION -> {
-                    onStatsEvent(StatsEvent.SetConstitution(statValue - 1))
-                }
-                Stat.CHARISMA -> {
-                    onStatsEvent(StatsEvent.SetCharisma(statValue - 1))
-                }
+            Stat.STRENGTH -> {
+                onStatsEvent(StatsEvent.SetStrength(statValue - 1))
             }
-
-            return true
+            Stat.DEXTERITY -> {
+                onStatsEvent(StatsEvent.SetDexterity(statValue - 1))
+            }
+            Stat.INTELLIGENCE -> {
+                onStatsEvent(StatsEvent.SetIntelligence(statValue - 1))
+            }
+            Stat.WISDOM -> {
+                onStatsEvent(StatsEvent.SetWisdom(statValue - 1))
+            }
+            Stat.CONSTITUTION -> {
+                onStatsEvent(StatsEvent.SetConstitution(statValue - 1))
+            }
+            Stat.CHARISMA -> {
+                onStatsEvent(StatsEvent.SetCharisma(statValue - 1))
+            }
         }
 
-        return false
     }
 }

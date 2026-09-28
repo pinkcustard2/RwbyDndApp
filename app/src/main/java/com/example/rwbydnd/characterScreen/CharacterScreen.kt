@@ -7,7 +7,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Notes
 import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
@@ -74,6 +74,7 @@ class CharacterScreen
         )
         val pagerState = rememberPagerState() { tabItems.size }
         var isEditing by remember {mutableStateOf(false)}
+        var saveChanges by remember {mutableStateOf(false)}
         LaunchedEffect(selectedTab) { pagerState.animateScrollToPage(selectedTab)
             isEditing = false
         }
@@ -141,13 +142,17 @@ class CharacterScreen
                 {
                     FloatingActionButton(
                         onClick = {
+                            if(isEditing)
+                            {
+                                saveChanges = true
+                            }
                             isEditing = !isEditing
                         },
                     ) {
                         if(!isEditing) {
                             Icon(Icons.Outlined.Edit, "Floating action button.")
                         } else {
-                            Icon(Icons.Outlined.Close, "Floating action button.")
+                            Icon(Icons.Outlined.Check, "Floating action button.")
                         }
                     }
                 }
@@ -176,6 +181,20 @@ class CharacterScreen
                         text = { Text("Are you sure you want to return home (data will be saved)") }
                     )
                 }
+                if(saveChanges)
+                {
+                    CharacterScreenAlerts().SaveChanges({
+                        onCharacterEvent(CharacterEvent.SetCharacterFromId(characterState.characterId))
+                        onStatsEvent(StatsEvent.SetStatsFromId)
+                        onProficiencyEvent(ProficiencyEvent.SetProficiencyFromId)
+                        saveChanges = false}, {
+                        onCharacterEvent(CharacterEvent.NewCharacter)
+                        onStatsEvent(StatsEvent.NewStats)
+                        onProficiencyEvent(ProficiencyEvent.NewProficiency)
+                        saveChanges = false
+                    })
+                }
+
                 when (selectedTab) {
                     0 -> {
                         CharacterTab().CharacterTab(statsState, characterState, proficiencyState, isEditing, onCharacterEvent, onProficiencyEvent, onStatsEvent)
