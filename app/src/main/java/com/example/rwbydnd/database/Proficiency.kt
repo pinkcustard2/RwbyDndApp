@@ -1,0 +1,29 @@
+package com.example.rwbydnd.database
+
+enum class Proficiency
+{
+    STRENGTH,
+    ATHLETICS,
+    DEXTERITY,
+    ACROBATICS,
+    SLEIGHT_OF_HAND,
+    STEALTH,
+    INTELLIGENCE,
+    ARCANA,
+    HISTORY,
+    INVESTIGATION,
+    NATURE,
+    RELIGION,
+    WISDOM,
+    ANIMAL_HANDLING,
+    INSIGHT,
+    MEDICINE,
+    PERCEPTION,
+    SURVIVAL,
+    CONSTITUTION,
+    CHARISMA,
+    DECEPTION,
+    INTIMIDATION,
+    PERFORMANCE,
+    PERSUASION
+}

@@ -38,10 +38,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.rwbydnd.database.Proficiency
 import com.example.rwbydnd.database.Stat
 import com.example.rwbydnd.database.character.CharacterEvent
 import com.example.rwbydnd.database.character.CharacterState
@@ -50,6 +53,8 @@ import com.example.rwbydnd.database.proficiency.ProficiencyState
 import com.example.rwbydnd.database.stats.StatsEvent
 import com.example.rwbydnd.database.stats.StatsState
 import com.example.rwbydnd.viewmodels.CharacterTabViewModel
+import java.util.Locale
+import java.util.Locale.getDefault
 
 class CharacterTab
 {
@@ -69,66 +74,66 @@ class CharacterTab
         Scaffold(modifier = Modifier.fillMaxSize())
         {
             val stats = mutableListOf(
-                "Strength" to statsState.strength,
-                "Dexterity" to statsState.dexterity,
-                "Intelligence" to statsState.intelligence,
-                "Wisdom" to statsState.wisdom,
-                "Constitution" to statsState.constitution,
-                "Charisma" to statsState.charisma
+                Stat.STRENGTH to statsState.strength,
+                Stat.DEXTERITY to statsState.dexterity,
+                Stat.INTELLIGENCE to statsState.intelligence,
+                Stat.WISDOM to statsState.wisdom,
+                Stat.CONSTITUTION to statsState.constitution,
+                Stat.CHARISMA to statsState.charisma
             )
 
             val proficiencies = mutableListOf(
-                "Strength Saving Throw" to proficiencyState.strength,
-                "Athletics" to proficiencyState.athletics,
-                "Dexterity Saving Throw" to proficiencyState.dexterity,
-                "Acrobatics" to proficiencyState.acrobatics,
-                "Sleight of Hand" to proficiencyState.sleightOfHand,
-                "Stealth" to proficiencyState.stealth,
-                "Intelligence Saving Throw" to proficiencyState.intelligence,
-                "Arcana" to proficiencyState.arcana,
-                "History" to proficiencyState.history,
-                "Investigation" to proficiencyState.investigation,
-                "Nature" to proficiencyState.nature,
-                "Religion" to proficiencyState.religion,
-                "Wisdom Saving Throw" to proficiencyState.wisdom,
-                "Animal Handling" to proficiencyState.animalHandling,
-                "Insight" to proficiencyState.insight,
-                "Medicine" to proficiencyState.medicine,
-                "Perception" to proficiencyState.perception,
-                "Survival" to proficiencyState.survival,
-                "Constitution Saving Throw" to proficiencyState.constitution,
-                "Charisma Saving Throw" to proficiencyState.charisma,
-                "Deception" to proficiencyState.deception,
-                "Intimidation" to proficiencyState.intimidation,
-                "Performance" to proficiencyState.performance,
-                "Persuasion" to proficiencyState.persuasion
+                Proficiency.STRENGTH to proficiencyState.strength,
+                Proficiency.ATHLETICS to proficiencyState.athletics,
+                Proficiency.DEXTERITY to proficiencyState.dexterity,
+                Proficiency.ACROBATICS to proficiencyState.acrobatics,
+                Proficiency.SLEIGHT_OF_HAND to proficiencyState.sleightOfHand,
+                Proficiency.STEALTH to proficiencyState.stealth,
+                Proficiency.INTELLIGENCE to proficiencyState.intelligence,
+                Proficiency.ARCANA to proficiencyState.arcana,
+                Proficiency.HISTORY to proficiencyState.history,
+                Proficiency.INVESTIGATION to proficiencyState.investigation,
+                Proficiency.NATURE to proficiencyState.nature,
+                Proficiency.RELIGION to proficiencyState.religion,
+                Proficiency.WISDOM to proficiencyState.wisdom,
+                Proficiency.ANIMAL_HANDLING to proficiencyState.animalHandling,
+                Proficiency.INSIGHT to proficiencyState.insight,
+                Proficiency.MEDICINE to proficiencyState.medicine,
+                Proficiency.PERCEPTION to proficiencyState.perception,
+                Proficiency.SURVIVAL to proficiencyState.survival,
+                Proficiency.CONSTITUTION to proficiencyState.constitution,
+                Proficiency.CHARISMA to proficiencyState.charisma,
+                Proficiency.DECEPTION to proficiencyState.deception,
+                Proficiency.INTIMIDATION to proficiencyState.intimidation,
+                Proficiency.PERFORMANCE to proficiencyState.performance,
+                Proficiency.PERSUASION to proficiencyState.persuasion
             )
 
             val proficiencyCategory = mutableMapOf(
-                "Strength Saving Throw" to statsState.strength,
-                "Athletics" to statsState.strength,
-                "Dexterity Saving Throw" to statsState.dexterity,
-                "Acrobatics" to statsState.dexterity,
-                "Sleight of Hand" to statsState.dexterity,
-                "Stealth" to statsState.dexterity,
-                "Intelligence Saving Throw" to statsState.intelligence,
-                "Arcana" to statsState.intelligence,
-                "History" to statsState.intelligence,
-                "Investigation" to statsState.intelligence,
-                "Nature" to statsState.intelligence,
-                "Religion" to statsState.intelligence,
-                "Wisdom Saving Throw" to statsState.wisdom,
-                "Animal Handling" to statsState.wisdom,
-                "Insight" to statsState.wisdom,
-                "Medicine" to statsState.wisdom,
-                "Perception" to statsState.wisdom,
-                "Survival" to statsState.wisdom,
-                "Constitution Saving Throw" to statsState.constitution,
-                "Charisma Saving Throw" to statsState.charisma,
-                "Deception" to statsState.charisma,
-                "Intimidation" to statsState.charisma,
-                "Performance" to statsState.charisma,
-                "Persuasion" to statsState.charisma
+                Proficiency.STRENGTH to statsState.strength,
+                Proficiency.ATHLETICS to statsState.strength,
+                Proficiency.DEXTERITY to statsState.dexterity,
+                Proficiency.ACROBATICS to statsState.dexterity,
+                Proficiency.SLEIGHT_OF_HAND to statsState.dexterity,
+                Proficiency.STEALTH to statsState.dexterity,
+                Proficiency.INTELLIGENCE to statsState.intelligence,
+                Proficiency.ARCANA to statsState.intelligence,
+                Proficiency.HISTORY to statsState.intelligence,
+                Proficiency.INVESTIGATION to statsState.intelligence,
+                Proficiency.NATURE to statsState.intelligence,
+                Proficiency.RELIGION to statsState.intelligence,
+                Proficiency.WISDOM to statsState.wisdom,
+                Proficiency.ANIMAL_HANDLING to statsState.wisdom,
+                Proficiency.INSIGHT to statsState.wisdom,
+                Proficiency.MEDICINE to statsState.wisdom,
+                Proficiency.PERCEPTION to statsState.wisdom,
+                Proficiency.SURVIVAL to statsState.wisdom,
+                Proficiency.CONSTITUTION to statsState.constitution,
+                Proficiency.CHARISMA to statsState.charisma,
+                Proficiency.DECEPTION to statsState.charisma,
+                Proficiency.INTIMIDATION to statsState.charisma,
+                Proficiency.PERFORMANCE to statsState.charisma,
+                Proficiency.PERSUASION to statsState.charisma
             )
 
             if(showSkillPointAlert != -1)
@@ -137,8 +142,12 @@ class CharacterTab
             }
 
             val scrollState = rememberScrollState()
-            Column(Modifier.padding().verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Row(Modifier.fillMaxWidth().padding(horizontal = 25.dp), horizontalArrangement = Arrangement.spacedBy(16.dp))
+            Column(Modifier
+                .padding()
+                .verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Row(Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 25.dp), horizontalArrangement = Arrangement.spacedBy(16.dp))
                 {
                     Box(modifier = Modifier
                         .weight(1f)
@@ -160,7 +169,8 @@ class CharacterTab
                             )
                             lineTo(0f, size.height * 0.15f)
                             close()
-                        }).background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
+                        })
+                        .background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
                     {
                         Text(text = "" + characterState.currentAura, color = MaterialTheme.colorScheme.onPrimary, fontSize = 28.sp);
                     }
@@ -196,7 +206,8 @@ class CharacterTab
                             )
 
                             close()
-                        }).background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
+                        })
+                        .background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
                     {
                         Text(text = "" + characterState.currentHealth, color = MaterialTheme.colorScheme.onPrimary, fontSize = 28.sp);
                     }
@@ -204,7 +215,8 @@ class CharacterTab
                     Box(modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f)
-                        .clip(CircleShape).background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
                     {
                         Text(text = "" + characterState.credits, color = MaterialTheme.colorScheme.onPrimary, fontSize = 28.sp);
                     }
@@ -224,7 +236,8 @@ class CharacterTab
                             lineTo(0f, size.height - cut)
                             lineTo(0f, cut)
                             close()
-                        }).background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
+                        })
+                        .background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
                     {
                         Text(text = "" + characterState.skillPoints, color = MaterialTheme.colorScheme.onPrimary, fontSize = 28.sp);
                     }
@@ -323,42 +336,56 @@ class CharacterTab
                             quadraticTo(x1, 0f, x1 + r, 0f)
 
                             close()
-                        }).background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
+                        })
+                        .background(MaterialTheme.colorScheme.primary), contentAlignment = Alignment.Center)
                     {
                         Text(text = "+" + characterState.proficiencyBonus, color = MaterialTheme.colorScheme.onPrimary, fontSize = 28.sp);
                     }
                 }
-                Row(Modifier.fillMaxWidth().padding(horizontal = 25.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)){
-                    stats.forEach { (name, value) ->
-                        if(name == "Strength" || name == "Dexterity" || name == "Intelligence")
+                Row(Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 25.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)){
+                    stats.forEach { (stat, value) ->
+                        if(stat == Stat.STRENGTH || stat == Stat.DEXTERITY || stat == Stat.INTELLIGENCE)
                         {
                             Box(
-                                modifier = Modifier.background(
-                                    shape = RoundedCornerShape(16.dp),
-                                    color = MaterialTheme.colorScheme.surfaceContainer
-                                ).border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.outline,
-                                    shape = RoundedCornerShape(16.dp)
-                                ).width(100.dp), contentAlignment = Alignment.Center
+                                modifier = Modifier
+                                    .background(
+                                        shape = RoundedCornerShape(16.dp),
+                                        color = MaterialTheme.colorScheme.surfaceContainer
+                                    )
+                                    .border(
+                                        width = 2.dp,
+                                        color = MaterialTheme.colorScheme.outline,
+                                        shape = RoundedCornerShape(16.dp)
+                                    )
+                                    .width(100.dp), contentAlignment = Alignment.Center
                             )
                             {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Box(
-                                        modifier = Modifier.background(
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = MaterialTheme.colorScheme.surfaceContainer
-                                        ).border(
-                                            width = 2.dp,
-                                            color = MaterialTheme.colorScheme.outline,
-                                            shape = RoundedCornerShape(16.dp)
-                                        ).fillMaxWidth().padding(vertical = 5.dp), contentAlignment = Alignment.Center
+                                        modifier = Modifier
+                                            .background(
+                                                shape = RoundedCornerShape(16.dp),
+                                                color = MaterialTheme.colorScheme.surfaceContainer
+                                            )
+                                            .border(
+                                                width = 2.dp,
+                                                color = MaterialTheme.colorScheme.outline,
+                                                shape = RoundedCornerShape(16.dp)
+                                            )
+                                            .fillMaxWidth()
+                                            .padding(vertical = 5.dp), contentAlignment = Alignment.Center
                                     )
                                     {
-                                        Text(text = name, textAlign = TextAlign.Center)
+                                        Text(text = stat.toString().lowercase().replaceFirstChar {
+                                            if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString()
+                                        }, textAlign = TextAlign.Center)
                                     }
 
-                                    Box(Modifier.fillMaxWidth().padding(vertical = 10.dp), contentAlignment = Alignment.Center)
+                                    Box(Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 10.dp), contentAlignment = Alignment.Center)
                                     {
                                         if(value >= 10)
                                         {
@@ -374,19 +401,10 @@ class CharacterTab
                                             if(value > 0)
                                             {
                                                 IconButton(onClick = {
-                                                    when(name)
-                                                    {
-                                                        "Strength" -> {
-                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.STRENGTH)
-                                                        }
-                                                        "Dexterity" -> {
-                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.DEXTERITY)
-                                                        }
-                                                        "Intelligence" -> {
-                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.INTELLIGENCE)
-                                                        }
-                                                    }
-                                                }, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
+                                                    characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, stat)
+                                                }, Modifier
+                                                    .align(Alignment.CenterStart)
+                                                    .offset(x = (-8).dp)) {
                                                     Icon(
                                                         imageVector = Icons.Filled.Remove,
                                                         contentDescription = "-1 stat"
@@ -395,18 +413,10 @@ class CharacterTab
                                             }
 
                                             IconButton(onClick = {
-                                                when(name)
-                                                {
-                                                    "Strength" -> {
-                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.STRENGTH)
-                                                    }
-                                                    "Dexterity" -> {
-                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.DEXTERITY)                                                    }
-                                                    "Intelligence" -> {
-                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.INTELLIGENCE)
-                                                    }
-                                                }
-                                            }, Modifier.align(Alignment.CenterEnd).offset(x = 8.dp)) {
+                                                showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, stat)
+                                            }, Modifier
+                                                .align(Alignment.CenterEnd)
+                                                .offset(x = 8.dp)) {
                                                 Icon(
                                                     imageVector = Icons.Filled.Add,
                                                     contentDescription = "+1 stat"
@@ -416,14 +426,18 @@ class CharacterTab
                                     }
 
                                     Box(
-                                        modifier = Modifier.background(
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = MaterialTheme.colorScheme.surfaceContainer
-                                        ).border(
-                                            width = 2.dp,
-                                            color = MaterialTheme.colorScheme.outline,
-                                            shape = RoundedCornerShape(16.dp)
-                                        ).fillMaxWidth().padding(vertical = 5.dp), contentAlignment = Alignment.Center
+                                        modifier = Modifier
+                                            .background(
+                                                shape = RoundedCornerShape(16.dp),
+                                                color = MaterialTheme.colorScheme.surfaceContainer
+                                            )
+                                            .border(
+                                                width = 2.dp,
+                                                color = MaterialTheme.colorScheme.outline,
+                                                shape = RoundedCornerShape(16.dp)
+                                            )
+                                            .fillMaxWidth()
+                                            .padding(vertical = 5.dp), contentAlignment = Alignment.Center
                                     )
                                     {
                                         Text(text = "" + value, textAlign = TextAlign.Center)
@@ -433,37 +447,50 @@ class CharacterTab
                         }
                     }
                 }
-                Row(Modifier.fillMaxWidth().padding(start = 25.dp, end = 25.dp, top = 10.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)){
-                    stats.forEach { (name, value) ->
-                        if(name == "Wisdom" || name == "Constitution" || name == "Charisma")
+                Row(Modifier
+                    .fillMaxWidth()
+                    .padding(start = 25.dp, end = 25.dp, top = 10.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)){
+                    stats.forEach { (stat, value) ->
+                        if(stat == Stat.WISDOM || stat == Stat.CONSTITUTION || stat == Stat.CHARISMA)
                         {
                             Box(
-                                modifier = Modifier.background(
-                                    shape = RoundedCornerShape(16.dp),
-                                    color = MaterialTheme.colorScheme.surfaceContainer
-                                ).border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.outline,
-                                    shape = RoundedCornerShape(16.dp)
-                                ).width(100.dp), contentAlignment = Alignment.Center
+                                modifier = Modifier
+                                    .background(
+                                        shape = RoundedCornerShape(16.dp),
+                                        color = MaterialTheme.colorScheme.surfaceContainer
+                                    )
+                                    .border(
+                                        width = 2.dp,
+                                        color = MaterialTheme.colorScheme.outline,
+                                        shape = RoundedCornerShape(16.dp)
+                                    )
+                                    .width(100.dp), contentAlignment = Alignment.Center
                             )
                             {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Box(
-                                        modifier = Modifier.background(
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = MaterialTheme.colorScheme.surfaceContainer
-                                        ).border(
-                                            width = 2.dp,
-                                            color = MaterialTheme.colorScheme.outline,
-                                            shape = RoundedCornerShape(16.dp)
-                                        ).fillMaxWidth().padding(vertical = 5.dp), contentAlignment = Alignment.Center
+                                        modifier = Modifier
+                                            .background(
+                                                shape = RoundedCornerShape(16.dp),
+                                                color = MaterialTheme.colorScheme.surfaceContainer
+                                            )
+                                            .border(
+                                                width = 2.dp,
+                                                color = MaterialTheme.colorScheme.outline,
+                                                shape = RoundedCornerShape(16.dp)
+                                            )
+                                            .fillMaxWidth()
+                                            .padding(vertical = 5.dp), contentAlignment = Alignment.Center
                                     )
                                     {
-                                        Text(text = name, textAlign = TextAlign.Center)
+                                        Text(text = stat.toString().lowercase().replaceFirstChar {
+                                            if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString()
+                                        }, textAlign = TextAlign.Center)
                                     }
 
-                                    Box(Modifier.fillMaxWidth().padding(vertical = 10.dp), contentAlignment = Alignment.Center)
+                                    Box(Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 10.dp), contentAlignment = Alignment.Center)
                                     {
                                         if(value >= 10)
                                         {
@@ -479,19 +506,10 @@ class CharacterTab
                                             if(value > 0)
                                             {
                                                 IconButton(onClick = {
-                                                    when(name)
-                                                    {
-                                                        "Wisdom" -> {
-                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.WISDOM)
-                                                        }
-                                                        "Constitution" -> {
-                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CONSTITUTION)
-                                                        }
-                                                        "Charisma" -> {
-                                                            characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CHARISMA)
-                                                        }
-                                                    }
-                                                }, Modifier.align(Alignment.CenterStart).offset(x = (-8).dp)) {
+                                                    characterTabViewModel.decrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, stat)
+                                                }, Modifier
+                                                    .align(Alignment.CenterStart)
+                                                    .offset(x = (-8).dp)) {
                                                     Icon(
                                                         imageVector = Icons.Filled.Remove,
                                                         contentDescription = "-1 stat"
@@ -500,19 +518,10 @@ class CharacterTab
                                             }
 
                                             IconButton(onClick = {
-                                                when(name)
-                                                {
-                                                    "Wisdom" -> {
-                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.WISDOM)
-                                                    }
-                                                    "Constitution" -> {
-                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CONSTITUTION)
-                                                    }
-                                                    "Charisma" -> {
-                                                        showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, Stat.CHARISMA)
-                                                    }
-                                                }
-                                            }, Modifier.align(Alignment.CenterEnd).offset(x = 8.dp)) {
+                                                showSkillPointAlert = characterTabViewModel.incrementStat(characterState, onCharacterEvent, statsState, onStatsEvent, stat)
+                                            }, Modifier
+                                                .align(Alignment.CenterEnd)
+                                                .offset(x = 8.dp)) {
                                                 Icon(
                                                     imageVector = Icons.Filled.Add,
                                                     contentDescription = "+1 stat"
@@ -522,14 +531,18 @@ class CharacterTab
                                     }
 
                                     Box(
-                                        modifier = Modifier.background(
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = MaterialTheme.colorScheme.surfaceContainer
-                                        ).border(
-                                            width = 2.dp,
-                                            color = MaterialTheme.colorScheme.outline,
-                                            shape = RoundedCornerShape(16.dp)
-                                        ).fillMaxWidth().padding(vertical = 5.dp), contentAlignment = Alignment.Center
+                                        modifier = Modifier
+                                            .background(
+                                                shape = RoundedCornerShape(16.dp),
+                                                color = MaterialTheme.colorScheme.surfaceContainer
+                                            )
+                                            .border(
+                                                width = 2.dp,
+                                                color = MaterialTheme.colorScheme.outline,
+                                                shape = RoundedCornerShape(16.dp)
+                                            )
+                                            .fillMaxWidth()
+                                            .padding(vertical = 5.dp), contentAlignment = Alignment.Center
                                     )
                                     {
                                         Text(text = "" + value, textAlign = TextAlign.Center)
@@ -545,13 +558,13 @@ class CharacterTab
                         .fillMaxWidth()
                 )
                 {
-                    proficiencies.forEach { (name, value) ->
-                        if (name == "Strength Saving Throw" ||
-                            name == "Dexterity Saving Throw" ||
-                            name == "Intelligence Saving Throw" ||
-                            name == "Wisdom Saving Throw" ||
-                            name == "Constitution Saving Throw" ||
-                            name == "Charisma Saving Throw"
+                    proficiencies.forEach { (proficiency, value) ->
+                        if (proficiency == Proficiency.STRENGTH ||
+                            proficiency == Proficiency.DEXTERITY ||
+                            proficiency == Proficiency.INTELLIGENCE ||
+                            proficiency == Proficiency.WISDOM ||
+                            proficiency == Proficiency.CONSTITUTION ||
+                            proficiency == Proficiency.CHARISMA
                         ) {
                             Row(
                                 Modifier.fillMaxSize(),
@@ -565,19 +578,24 @@ class CharacterTab
                                         .weight(1f)
                                 )
                                 {
-                                    Text(text = name)
+                                    Text(proficiency.toString().lowercase().replaceFirstChar {
+                                        if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString()
+                                    } + " Saving Throw")
                                 }
-                                Box(modifier = Modifier.background(
+                                Box(modifier = Modifier
+                                    .background(
                                         shape = RoundedCornerShape(16.dp),
                                         color = MaterialTheme.colorScheme.surfaceContainer
-                                    ).border(
+                                    )
+                                    .border(
                                         width = 2.dp,
                                         color = MaterialTheme.colorScheme.outline,
                                         shape = RoundedCornerShape(16.dp)
-                                    ).fillMaxHeight()
+                                    )
+                                    .fillMaxHeight()
                                     .padding(10.dp, 0.dp))
                                 {
-                                    val baseBonus = ((proficiencyCategory[name])!! - 10) / 2
+                                    val baseBonus = ((proficiencyCategory[proficiency])!! - 10) / 2
                                     if(value && baseBonus + (characterState.proficiencyBonus) >= 0)
                                     {
                                         Text(text = "+" + (baseBonus + characterState.proficiencyBonus))
@@ -591,7 +609,12 @@ class CharacterTab
                                         Text(text = "" + baseBonus)
                                     }
                                 }
-                                IconButton(onClick = {}, Modifier.padding(start = 5.dp))
+                                IconButton(onClick = {
+                                    if(isEditing)
+                                    {
+                                        showSkillPointAlert = CharacterTabViewModel().toggleProficiency(value, true, proficiency, proficiencyState, onProficiencyEvent, characterState, onCharacterEvent)
+                                    }
+                                }, Modifier.padding(start = 5.dp))
                                 {
                                     if(!value)
                                     {
@@ -618,19 +641,25 @@ class CharacterTab
                                         .weight(1f)
                                 )
                                 {
-                                    Text(text = name)
+                                    Text(text = proficiency.toString().lowercase()
+                                        .replaceFirstChar {
+                                            if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString()
+                                        })
                                 }
-                                Box(modifier = Modifier.background(
-                                    shape = RoundedCornerShape(16.dp),
-                                    color = MaterialTheme.colorScheme.surfaceContainer
-                                ).border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.outline,
-                                    shape = RoundedCornerShape(16.dp)
-                                ).fillMaxHeight()
+                                Box(modifier = Modifier
+                                    .background(
+                                        shape = RoundedCornerShape(16.dp),
+                                        color = MaterialTheme.colorScheme.surfaceContainer
+                                    )
+                                    .border(
+                                        width = 2.dp,
+                                        color = MaterialTheme.colorScheme.outline,
+                                        shape = RoundedCornerShape(16.dp)
+                                    )
+                                    .fillMaxHeight()
                                     .padding(10.dp, 0.dp))
                                 {
-                                    val baseBonus = ((proficiencyCategory[name])!! - 10) / 2
+                                    val baseBonus = ((proficiencyCategory[proficiency])!! - 10) / 2
                                     if(value && baseBonus + (characterState.proficiencyBonus) >= 0)
                                     {
                                         Text(text = "+" + (baseBonus + characterState.proficiencyBonus))
@@ -644,7 +673,12 @@ class CharacterTab
                                         Text(text = "" + baseBonus)
                                     }
                                 }
-                                IconButton(onClick = {}, Modifier.padding(start = 5.dp))
+                                IconButton(onClick = {
+                                    if(isEditing)
+                                    {
+                                        showSkillPointAlert = CharacterTabViewModel().toggleProficiency(value, false, proficiency, proficiencyState, onProficiencyEvent, characterState, onCharacterEvent)
+                                    }
+                                }, Modifier.padding(start = 5.dp))
                                 {
                                     if(!value)
                                     {

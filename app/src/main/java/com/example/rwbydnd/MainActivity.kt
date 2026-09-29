@@ -30,6 +30,7 @@ import kotlinx.serialization.Serializable
 // To do:
 // Make so species and semblance strength text defaults to correct one when editing character
 // Make so all required information must be entered before moving forward from screen 5
+// Refactor old code so it is good (use enums and convert stuff that should be in viewmodel into viewmodel)
 class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(
